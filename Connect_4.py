@@ -1,8 +1,6 @@
 import random
 import re
 
-board = [[':white_circle:', ':white_circle:', ':white_circle:', ':white_circle:', ':white_circle:', ':white_circle:', ':white_circle:'], [':white_circle:', ':white_circle:', ':white_circle:', ':white_circle:', ':white_circle:', ':white_circle:', ':white_circle:'], [':white_circle:', ':white_circle:', ':white_circle:', ':white_circle:', ':white_circle:', ':white_circle:', ':white_circle:'], [':white_circle:', ':white_circle:', ':white_circle:', ':white_circle:', ':white_circle:', ':white_circle:', ':white_circle:'], [':white_circle:', ':white_circle:', ':white_circle:', ':white_circle:', ':white_circle:', ':white_circle:', ':white_circle:'], [':white_circle:', ':white_circle:', ':white_circle:', ':white_circle:', ':white_circle:', ':white_circle:', ':white_circle:']]
-
 def check_move(table, column):
     stop = False
     count = 5
@@ -112,7 +110,13 @@ def check_win(board):
             return (':red_circle:')
             
 def get_board():
-    return(board)
+    game_board = []
+    for i in range(0,6):
+        game_board.append([])
+        for p in range(0,7):
+            game_board[i].append(':white_circle:')
+        
+    return(game_board)
 ################################################################################    
 
-               
+         

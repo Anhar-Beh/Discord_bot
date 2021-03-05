@@ -14,9 +14,10 @@ bot = commands.Bot(command_prefix='!')
 
 gay = re.compile('gay')
 rejus_bot = re.compile('|')
+n = re.compile('nigga')
 
 threat = ['I saw that', 'What you deleting bro', 'I know', 'What you doing boy?', 'Anhar may not know, but I know', 'I\'m always watching you', 'Very sus', 'hmmm interesting']
-command = ['!commands','!gamedecider', '!rockpaperscissors', '!coinflip', '!cleanup', '!8ball', '!connect4', '!gaycount']
+command = ['!commands','!gamedecider', '!rockpaperscissors', '!coinflip', '!cleanup', '!8ball', '!connect4', '!gaycount', '!ncount']
 _8ball_ans = ['It is certain.', 'It is decidedly so.', 'Without a doubt.', 'Yes - definitely.', 'You may rely on it.', 'As I see it, yes.', 'Most likely.', 'Outlook good.', 'Yes.', 'Signs point to yes.', 'Reply hazy, try again.', 'Ask again later.', 'Cannot predict now.', 'Concentrate and ask again.', 'Don\'t count on it.', 'My reply is no.', 'My sources say no.', 'Outlook not so good.', 'Very doubtful.'] 
 ##################################################################### Events ###############################################################################################################
 @bot.event
@@ -37,7 +38,7 @@ async def on_message(message):
     if message.content.lower().startswith('terbaikkk'):
         await message.delete()
         await message.channel.send('https://tenor.com/view/tunm-mahathir-tun-bersatu-ppbm-gif-9852429')
-    if gay.search(message.content.lower()) != None:
+    if gay.search(message.content.lower()) != None and message.content.lower() != '!gaycount':
         try:
             count = []
             with open('Gay_count.txt','r') as r:
@@ -47,6 +48,22 @@ async def on_message(message):
                     count.append([cleanUp[0], cleanUp[1]])
                 del info
             with open('Gay_count.txt','w') as w:
+                for row in count:
+                    if row[0] == message.author.nick:
+                        row[1] = str(int(row[1])+1)
+                    w.write(row[0] + ',' + row[1] + '\n')
+        except:
+            print('In the dms')
+    if n.search(message.content.lower()) != None and message.content.lower() != '!ncount':
+        try:
+            count = []
+            with open('n_count.txt','r') as r:
+                info = r.readlines()
+                for row in info:
+                    cleanUp = row.strip('\n').split(',')
+                    count.append([cleanUp[0], cleanUp[1]])
+                del info
+            with open('n_count.txt','w') as w:
                 for row in count:
                     if row[0] == message.author.nick:
                         row[1] = str(int(row[1])+1)
@@ -282,7 +299,7 @@ async def connect_4(ctx):
                     try:
                         move = C4.check_move(board, (int(answer.content)-1))
                         if move == False:
-                            ctx.send('invalid move, Column has been filled.')
+                            await ctx.send('invalid move, Column has been filled.')
                         else:
                             board[int(move)][int(answer.content)-1] = turn
                             turn = C4.change_turn(turn)
@@ -305,9 +322,9 @@ async def connect_4(ctx):
                                 await ctx.send('**It\'s a tie**')
                                 game_over = True
                     except:
-                        ctx.send('Invalid input, stop being a fool')
+                        await ctx.send('Invalid input, stop being a fool')
                 except:
-                    ctx.send('Rock_Paper_Scissor.py Game over')
+                    await ctx.send('Ran out of time, Game over')
                     game_over = True
                                    
         except:
@@ -333,7 +350,26 @@ async def gay_count(ctx):
                 )
         await ctx.send(embed=embed)
 
-    
+#N word count cuz josh asked for it
+@bot.command(name = 'ncount', help = 'This is a count of how many times the word \"nigga\" has been said')
+async def gay_count(ctx):
+    if ctx.guild.name == 'Abnormal title':
+        count = []
+        n_list = []
+        with open('n_count.txt','r') as r:
+            info = r.readlines()
+            for row in info:
+                cleanUp = row.strip('\n').split(',')
+                count.append([cleanUp[0], cleanUp[1]])
+        for row in count:
+            n_list.append(row[0] + ' has said \"nigga\" ' + row[1] + ' times')
+        embed = discord.Embed(
+                title = 'N word count',
+                description = ('\n'.join(n_list)),
+                colour = discord.Colour.dark_red()
+                )
+        await ctx.send(embed=embed)
+
 
 ############################################################################################################################################################################################
 bot.run(TOKEN)
