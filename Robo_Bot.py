@@ -3,15 +3,12 @@ import asyncio
 import os
 import random
 import re
-from dotenv import load_dotenv
 from discord.ext import commands
 import Games_Decider as GD
 import Rock_Paper_Scissor as RPS
 import Connect_4 as C4
 
-load_dotenv()
-TOKEN = os.getenv('DISCORD_TOKEN')
-GUILD = os.getenv('DISCORD_GUILD')
+TOKEN = 'ODE0MTM2Nzc1NDk2MzAyNjgz.YDZd9Q.SEYFfP3CSmNAeg6deX4dD11mOP8'
 
 bot = commands.Bot(command_prefix='!')
 
