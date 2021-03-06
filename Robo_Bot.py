@@ -298,11 +298,13 @@ async def connect_4(ctx):
                     answer = await bot.wait_for('message',timeout = 120, check=check)
                     if answer.content.lower() == 'forfeit':
                         if answer.author.nick == player.author.nick:
-                            await ctx.send(f'**{ctx.author.nick} Wins by forfeit**')
+                            await ctx.send(f'**{ctx.author.nick} wins by forfeit**')
                             game_over = True
+                            break
                         else:
-                            await ctx.send(f'**{player.author.nick} Wins by forfeit**')
+                            await ctx.send(f'**{player.author.nick} wins by forfeit**')
                             game_over = True
+                            break
                     try:
                         move = C4.check_move(board, (int(answer.content)-1))
                         if move == False:
