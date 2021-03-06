@@ -296,6 +296,13 @@ async def connect_4(ctx):
 
                 try:
                     answer = await bot.wait_for('message',timeout = 120, check=check)
+                    if answer.content.lower() == 'forfeit':
+                        if answer.author.nick == player.author.nick:
+                            await ctx.send(f'**{ctx.author.nick} Wins by forfeit**')
+                            game_over = True
+                        else:
+                            await ctx.send(f'**{player.author.nick} Wins by forfeit**')
+                            game_over = True
                     try:
                         move = C4.check_move(board, (int(answer.content)-1))
                         if move == False:
@@ -352,7 +359,7 @@ async def gay_count(ctx):
 
 #N word count cuz josh asked for it
 @bot.command(name = 'ncount', help = 'This is a count of how many times the word \"nigga\" has been said')
-async def gay_count(ctx):
+async def n_count(ctx):
     if ctx.guild.name == 'Abnormal title':
         count = []
         n_list = []
