@@ -10,14 +10,16 @@ import Connect_4 as C4
 
 TOKEN = 'ODE0MTM2Nzc1NDk2MzAyNjgz.YDZd9Q.SEYFfP3CSmNAeg6deX4dD11mOP8'
 
-bot = commands.Bot(command_prefix='!')
+intents = discord.Intents.all()
+bot = commands.Bot(command_prefix='!', intents=intents)
 
 gay = re.compile('gay')
 rejus_bot = re.compile('|')
 n = re.compile('nigga')
+n2 = re.compile('nigger')
 
 threat = ['I saw that', 'What you deleting bro', 'I know', 'What you doing boy?', 'Anhar may not know, but I know', 'I\'m always watching you', 'Very sus', 'hmmm interesting']
-command = ['!commands','!gamedecider', '!rockpaperscissors', '!coinflip', '!cleanup', '!8ball', '!connect4', '!gaycount', '!ncount']
+command = ['!commands','!gamedecider', '!rockpaperscissors', '!coinflip', '!cleanup', '!8ball', '!connect4', '!gaycount', '!ncount', '!c4leaderboard']
 _8ball_ans = ['It is certain.', 'It is decidedly so.', 'Without a doubt.', 'Yes - definitely.', 'You may rely on it.', 'As I see it, yes.', 'Most likely.', 'Outlook good.', 'Yes.', 'Signs point to yes.', 'Reply hazy, try again.', 'Ask again later.', 'Cannot predict now.', 'Concentrate and ask again.', 'Don\'t count on it.', 'My reply is no.', 'My sources say no.', 'Outlook not so good.', 'Very doubtful.'] 
 ##################################################################### Events ###############################################################################################################
 @bot.event
@@ -54,7 +56,7 @@ async def on_message(message):
                     w.write(row[0] + ',' + row[1] + '\n')
         except:
             print('In the dms')
-    if n.search(message.content.lower()) != None and message.content.lower() != '!ncount':
+    if n.search(message.content.lower()) != None and n2.search(message.content.lower()) != None and message.content.lower() != '!ncount':
         try:
             count = []
             with open('n_count.txt','r') as r:
@@ -300,10 +302,12 @@ async def connect_4(ctx):
                         if answer.author.nick == player.author.nick:
                             await ctx.send(f'**{ctx.author.nick} wins by forfeit**')
                             game_over = True
+                            C4.save(ctx.author.nick, player.author.nick)
                             break
                         else:
                             await ctx.send(f'**{player.author.nick} wins by forfeit**')
                             game_over = True
+                            C4.save(player.author.nick, ctx.author.nick)
                             break
                     try:
                         move = C4.check_move(board, (int(answer.content)-1))
@@ -324,9 +328,11 @@ async def connect_4(ctx):
                             if C4.check_win(board) == ':blue_circle:':
                                 await ctx.send(f'**{ctx.author.nick} won**')
                                 game_over = True
+                                C4.save(ctx.author.nick, player.author.nick)
                             elif C4.check_win(board) == ':red_circle:':
                                 await ctx.send(f'**{player.author.nick} won**')
                                 game_over = True
+                                C4.save(player.author.nick, ctx.author.nick)
                             elif C4.check_win(board) == 'Tie':
                                 await ctx.send('**It\'s a tie**')
                                 game_over = True
@@ -371,13 +377,68 @@ async def n_count(ctx):
                 cleanUp = row.strip('\n').split(',')
                 count.append([cleanUp[0], cleanUp[1]])
         for row in count:
-            n_list.append(row[0] + ' has said \"nigga\" ' + row[1] + ' times')
+            n_list.append(row[0] + ' has said the N word ' + row[1] + ' times')
         embed = discord.Embed(
                 title = 'N word count',
                 description = ('\n'.join(n_list)),
                 colour = discord.Colour.dark_red()
                 )
         await ctx.send(embed=embed)
+
+#Connect 4 leaderboard
+@bot.command(name = 'c4leaderboard' , help = 'displays the Connect 4 leaderboard')
+async def connect4_leaderboard(ctx):
+    if ctx.guild.name == 'Abnormal title':
+        await ctx.send('Choose between "overall" or say someone\'s name')
+
+        #Checks if the reply is not from the original caller of the program and if it is from the same channel
+        def check(msg):
+            return msg.author == ctx.author and msg.channel == ctx.channel
+
+        answer = await bot.wait_for('message',timeout = 30, check=check)
+        if answer.content.lower() == 'overall':
+            scores = C4.load(answer.content.lower())
+            embed = discord.Embed(
+                title = 'Connect 4 Leaderboard',
+                description = ('\n'.join(scores)),
+                colour = discord.Colour.dark_red()
+                )
+            await ctx.send(embed=embed)
+            
+        else:
+            if C4.load(answer.content.lower()) == 'Invalid input, person does not exist':
+                await ctx.send(C4.load(answer.content.lower()))
+            else:
+                person = C4.load(answer.content.lower())
+                for member in ctx.guild.members:
+                    try:
+                        if member.nick.lower() == answer.content.lower():
+                            user = member.nick
+                            pfp = member.avatar_url
+                    except:
+                        print('false')
+                total = person[0][1]
+                wins = person[5]
+                loss = person[6]
+                if total == '0':
+                    ratio = '0'
+                else:
+                    ratio = str(int(wins)/int(loss))
+                embed = discord.Embed(
+                title = user,
+                description = ('Total games: ' + person[0][1] + '\nTotal wins: ' + wins + '\nW/L ratio: ' + ratio),
+                colour = discord.Colour.dark_red()
+                )
+                embed.set_thumbnail(url = pfp)
+                embed.set_author(name = 'Connect 4 leaderboard')
+                embed.add_field(name = ('vs ' + person[1][0]), value = person[1][1], inline = True)
+                embed.add_field(name = ('vs ' + person[2][0]), value = person[2][1], inline = True)
+                embed.add_field(name = ('vs ' + person[3][0]), value = person[3][1], inline = True)
+                embed.add_field(name = ('vs ' + person[4][0]), value = person[4][1], inline = True)
+                await ctx.send(embed=embed)
+                
+
+        
 
 
 ############################################################################################################################################################################################
