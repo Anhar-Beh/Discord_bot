@@ -433,7 +433,7 @@ async def connect4_leaderboard(ctx):
                 embed.set_author(name = 'Connect 4 leaderboard')
                 embed.add_field(name = ('vs ' + person[1][0]), value = person[1][1], inline = True)
                 embed.add_field(name = ('vs ' + person[2][0]), value = person[2][1], inline = True)
-                embed.add_field(name = ('vs ' + person[3][0]), value = person[3][1], inline = True)
+                embed.add_field(name = ('vs ' + person[3][0]), value = person[3][1], inline = False)
                 embed.add_field(name = ('vs ' + person[4][0]), value = person[4][1], inline = True)
                 await ctx.send(embed=embed)
                 

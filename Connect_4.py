@@ -173,7 +173,7 @@ def load(specific):
                     try:
                         leader_board.append(row[0:-6] + ' has a W/L ratio of ' + str(round((wins/loss),2)))
                     except:
-                        leader_board.append(row[0:-6] + ' has won 0 games')
+                        leader_board.append(row[0:-6] + ' has played 0 games')
                     count +=1
                 else:
                     count += 1
