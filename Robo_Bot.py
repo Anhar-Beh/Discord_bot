@@ -425,7 +425,7 @@ async def connect4_leaderboard(ctx):
                 else:
                     ratio = str(int(wins)/int(loss))
                 embed = discord.Embed(
-                title = user,
+                title = ('__' + user + '__'),
                 description = ('Total games: ' + person[0][1] + '\nTotal wins: ' + wins + '\nW/L ratio: ' + ratio),
                 colour = discord.Colour.dark_red()
                 )
