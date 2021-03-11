@@ -118,96 +118,92 @@ def get_board():
         
     return(game_board)
 
+
 def save(winner, opponent):
-    win = (winner + '_lead\n')
-    key = re.compile('_lead')
     with open('Connect4_leaderboard.txt','r') as f:
         info = f.readlines()
-        count = 0
-        attribute = []
-        temp = []
+        data = []
         for row in info:
-            if row == win:
-                for i in range(count+1, count+6):
-                    attribute.append(info[i].strip('\n').split(','))
-                count += 1
-                    
-            else:
-                if key.search(row) != None:
-                    for i in range(count, count+6):
-                        temp.append(info[i])
-                count += 1
-                
+            data.append(row.strip('\n').split(','))
+
     with open('Connect4_leaderboard.txt','w') as f:
-        f.write(winner + '_lead\n') 
-        for row in attribute:
-            if row[0] == 'total':
-                row[1] = str(int(row[1]) + 1)
-                
+        foundw = False
+        foundl = False
+        for row in data:
+            if row[0] == winner:
+                foundw = True
+                foundop = False
+                for i in range(0, len(row)):
+                    if row[i] == 'total':
+                        row[i+1] = str(int(row[i+1])+1)
+                    if row[i] == opponent:
+                        row[i+1] = str(int(row[i+1])+1)
+                        foundop = True
+                if foundop == False:
+                    row.append(opponent)
+                    row.append('1')
             if row[0] == opponent:
-                row[1] = str(int(row[1]) + 1)
-                 
-            f.write(row[0] + ',' + row[1] + '\n')
-        for row in temp:
-            f.write(row)
+                foundl = True
+                for i in range(0, len(row)):
+                    if row[i] == 'total':
+                        row[i+1] = str(int(row[i+1])+1)
+                        
+        if foundw == False:
+            data.append([winner, 'total', '1', opponent, '1'])
+        if foundl == False:
+            data.append([opponent, 'total', '1'])
 
+        for row in data:
+            f.write(','.join(row))
+            f.write('\n')
+            
 def load(specific):
-    key = re.compile('_lead')
-    #to post all W/L
-    if specific == 'overall':
-        with open('Connect4_leaderboard.txt','r') as f:
-            info = f.readlines()
-            count = 0
-            leader_board = []
-            for row in info:
-                temp = []
-                wins = 0
-                loss = 0
-                if key.search(row) != None:
-                    for i in range(1,6):
-                        temp.append(info[count+i].strip('\n').split(','))
-                    for i in range(2,6):
-                        wins += int(temp[i-1][1])
-                    loss = int(temp[0][1])-wins
-
-                    try:
-                        leader_board.append(row[0:-6] + ' has a W/L ratio of ' + str(round((wins/loss),2)))
-                    except:
-                        leader_board.append(row[0:-6] + ' has played 0 games')
-                    count +=1
-                else:
-                    count += 1
-            return(leader_board)
-    else:
-        with open('Connect4_leaderboard.txt','r') as f:
-            info = f.readlines()
-            count = 0
-            person = []
+    with open('Connect4_leaderboard.txt','r') as f:
+        info = f.readlines()
+        data= []
+        for row in info:
+            data.append(row.strip('\n').split(','))
+            
+        if specific == 'overall':
+            try:
+                leaderboard = []
+                for row in data:
+                    total = int(row[2])
+                    wins = 0
+                    loss = 0
+                    for i in range(3, len(row)):
+                        try:
+                            wins += int(row[i])
+                        except:
+                            print('name founded instead of number')
+                    loss = total - wins
+                    if loss == 0:
+                        ratio = wins
+                        leaderboard.append(row[0] + ' has a W/L ratio of ' + str(ratio))
+                    elif wins == 0:
+                        ratio = 0
+                        leaderboard.append(row[0] + ' has a W/L ratio of ' + str(ratio))
+                    else:
+                        ratio = str(round(wins/loss),2)
+                        leaderboard.append(row[0] + ' has a W/L ratio of ' + str(ratio))
+                        
+                return (leaderboard)
+            
+            except:
+                return (None)
+        else:
             found = False
-            for row in info:
-                temp = []
-                wins = 0
-                loss = 0
-                if key.search(row) != None:
-                    if row[0:-6].lower() == specific:
-                        for i in range(count+1, count+6):
-                            person.append(info[i].strip('\n').split(','))
-                            found = True
-                        for i in range(1,6):
-                            temp.append(info[count+i].strip('\n').split(','))
-                        for i in range(2,6):
-                            wins += int(temp[i-1][1])
-                        loss = int(temp[0][1])-wins
-                        person.append(str(wins))
-                        person.append(str(loss))
-                            
-                    count += 1
-                else:
-                    count += 1
-            if found == True:
-                return(person)
-            else:
-                return('Invalid input, person does not exist')
-################################################################################    
+            for row in data:
+                if row[0] == specific:
+                    found = True
+                    return (row)
+                
+            if found == False:
+                return(None)
+                
+                    
+                    
+            
+#############################################################################################################################################################################################    
 
 

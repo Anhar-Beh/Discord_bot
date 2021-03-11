@@ -1,4 +1,4 @@
-Rainbow Six Siege,3
-Rec Room,3
-Zombies,3
-For Honor,1
+Rainbow Six Siege,0
+Rec Room,0
+Zombies,0
+For Honor,0

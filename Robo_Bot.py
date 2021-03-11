@@ -48,12 +48,15 @@ async def on_message(message):
                 for row in info:
                     cleanUp = row.strip('\n').split(',')
                     count.append([cleanUp[0], cleanUp[1]])
-                del info
             with open('Gay_count.txt','w') as w:
+                found = False
                 for row in count:
-                    if row[0] == message.author.nick:
+                    if row[0] == message.author.nick.lower():
                         row[1] = str(int(row[1])+1)
-                    w.write(row[0] + ',' + row[1] + '\n')
+                        found = True
+                        w.write(row[0] + ',' + row[1] + '\n')
+                if found == False:
+                    w.write(message.author.nick + ',' + str(1) + '\n')
         except:
             print('In the dms')
     if n.search(message.content.lower()) != None and n2.search(message.content.lower()) != None and message.content.lower() != '!ncount':
@@ -64,12 +67,15 @@ async def on_message(message):
                 for row in info:
                     cleanUp = row.strip('\n').split(',')
                     count.append([cleanUp[0], cleanUp[1]])
-                del info
             with open('n_count.txt','w') as w:
+                found = False
                 for row in count:
-                    if row[0] == message.author.nick:
+                    if row[0] == message.author.nick.lower():
                         row[1] = str(int(row[1])+1)
-                    w.write(row[0] + ',' + row[1] + '\n')
+                        found = True
+                        w.write(row[0] + ',' + row[1] + '\n')
+                if found == False:
+                    w.write(message.author.nick + ',' + str(1) + '\n')
         except:
             print('In the dms')
                 
@@ -110,7 +116,7 @@ async def on_message(message):
     
 @bot.event
 async def on_message_delete(message):
-    if message.author.name != bot.user.name and message.content.lower() != 'terbaikkk' and message.content.lower() != 'ish' and rejus_bot.search(message.content.lower()) == None:
+    if message.author.name != bot.user.name and message.content.lower() != 'terbaikkk' and message.content.lower() != 'ish' and rejus_bot.search(message.content.lower()) != True:
         await message.author.send(random.choice(threat))
         
     await bot.process_commands(message)
@@ -394,49 +400,59 @@ async def connect4_leaderboard(ctx):
         #Checks if the reply is not from the original caller of the program and if it is from the same channel
         def check(msg):
             return msg.author == ctx.author and msg.channel == ctx.channel
-
-        answer = await bot.wait_for('message',timeout = 30, check=check)
-        if answer.content.lower() == 'overall':
-            scores = C4.load(answer.content.lower())
-            embed = discord.Embed(
-                title = 'Connect 4 Leaderboard',
-                description = ('\n'.join(scores)),
-                colour = discord.Colour.dark_red()
-                )
-            await ctx.send(embed=embed)
-            
-        else:
-            if C4.load(answer.content.lower()) == 'Invalid input, person does not exist':
-                await ctx.send(C4.load(answer.content.lower()))
-            else:
-                person = C4.load(answer.content.lower())
-                for member in ctx.guild.members:
-                    try:
-                        if member.nick.lower() == answer.content.lower():
-                            user = member.nick
-                            pfp = member.avatar_url
-                    except:
-                        print('false')
-                total = person[0][1]
-                wins = person[5]
-                loss = person[6]
-                if total == '0':
-                    ratio = '0'
-                else:
-                    ratio = str(int(wins)/int(loss))
+        try:
+            answer = await bot.wait_for('message',timeout = 30, check=check)
+            if answer.content.lower() == 'overall':
+                scores = C4.load(answer.content.lower())
                 embed = discord.Embed(
-                title = ('__' + user + '__'),
-                description = ('Total games: ' + person[0][1] + '\nTotal wins: ' + wins + '\nW/L ratio: ' + ratio),
-                colour = discord.Colour.dark_red()
-                )
-                embed.set_thumbnail(url = pfp)
-                embed.set_author(name = 'Connect 4 leaderboard')
-                embed.add_field(name = ('vs ' + person[1][0]), value = person[1][1], inline = True)
-                embed.add_field(name = ('vs ' + person[2][0]), value = person[2][1], inline = True)
-                embed.add_field(name = ('vs ' + person[3][0]), value = person[3][1], inline = False)
-                embed.add_field(name = ('vs ' + person[4][0]), value = person[4][1], inline = True)
+                    title = 'Connect 4 Leaderboard',
+                    description = ('\n'.join(scores)),
+                    colour = discord.Colour.dark_red()
+                    )
                 await ctx.send(embed=embed)
                 
+            else:
+                if C4.load(answer.content.lower()) == None:
+                    await ctx.send('Person does not exist or they have played 0 games')
+                else:
+                    person = C4.load(answer.content.lower())
+                    for member in ctx.guild.members:
+                        try:
+                            if member.nick.lower() == answer.content.lower():
+                                user = member.nick
+                                pfp = member.avatar_url
+                        except:
+                            print('false')
+                    total = person[2]
+                    wins = 0
+                    loss = 0
+                    count = 0
+                    for i in range(3, len(person)):
+                        count += 1
+                        try:
+                            wins += int(person[i])
+                        except:
+                            print('name founded instead of number')
+                    loss = int(total) - wins
+                    count = count//2
+                    if total == '0':
+                        ratio = '0'
+                    elif loss == 0:
+                        ratio = str(wins)
+                    else:
+                        ratio = str(round((wins/loss),2))
+                    embed = discord.Embed(
+                    title = ('__' + user + '__'),
+                    description = ('Total games: ' + person[2] + '\nTotal wins: ' + str(wins) + '\nW/L ratio: ' + ratio),
+                    colour = discord.Colour.dark_red()
+                    )
+                    embed.set_thumbnail(url = pfp)
+                    embed.set_author(name = 'Connect 4 leaderboard')
+                    for i in range(0,count):
+                        embed.add_field(name = ('vs ' + person[i+3]), value = person[i+4], inline = True)
+                    await ctx.send(embed=embed)
+        except:
+            await ctx.send('Ran out of time to answer')
 
         
 
