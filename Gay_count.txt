@@ -1,6 +1,1 @@
-Anhar,0
-Rejus,2
-Faizan,5
-Syed,2
-Josh,0
-Hassan,33
+Anhar,3

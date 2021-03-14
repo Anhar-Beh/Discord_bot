@@ -25,3 +25,4 @@ def compare(u1, name1, u2, name2):
     else:
         return("Fail")
 
+print('Rock, Paper, Scissors is online')

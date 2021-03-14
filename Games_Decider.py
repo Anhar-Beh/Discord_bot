@@ -69,4 +69,4 @@ def percentage(data,lottery):
 #Game List
 games = ['Rainbow Six Siege', 'Rec Room', 'Zombies', 'For Honor']
 
-
+print('Game Decider is online')

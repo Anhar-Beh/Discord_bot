@@ -130,19 +130,19 @@ def save(winner, opponent):
         foundw = False
         foundl = False
         for row in data:
-            if row[0] == winner:
+            if row[0].lower() == winner.lower():
                 foundw = True
                 foundop = False
                 for i in range(0, len(row)):
                     if row[i] == 'total':
                         row[i+1] = str(int(row[i+1])+1)
-                    if row[i] == opponent:
+                    if row[i].lower() == opponent.lower():
                         row[i+1] = str(int(row[i+1])+1)
                         foundop = True
                 if foundop == False:
                     row.append(opponent)
                     row.append('1')
-            if row[0] == opponent:
+            if row[0].lower() == opponent.lower():
                 foundl = True
                 for i in range(0, len(row)):
                     if row[i] == 'total':
@@ -164,7 +164,7 @@ def load(specific):
         for row in info:
             data.append(row.strip('\n').split(','))
             
-        if specific == 'overall':
+        if specific.lower() == 'overall':
             try:
                 leaderboard = []
                 for row in data:
@@ -184,7 +184,7 @@ def load(specific):
                         ratio = 0
                         leaderboard.append(row[0] + ' has a W/L ratio of ' + str(ratio))
                     else:
-                        ratio = str(round(wins/loss),2)
+                        ratio = str(round((wins/loss),2))
                         leaderboard.append(row[0] + ' has a W/L ratio of ' + str(ratio))
                         
                 return (leaderboard)
@@ -194,7 +194,7 @@ def load(specific):
         else:
             found = False
             for row in data:
-                if row[0] == specific:
+                if row[0].lower() == specific.lower():
                     found = True
                     return (row)
                 
@@ -205,5 +205,5 @@ def load(specific):
                     
             
 #############################################################################################################################################################################################    
-
+print ('Connect 4 is online')
 
