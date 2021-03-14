@@ -118,6 +118,7 @@ async def on_message(message):
 async def on_message_delete(message):
     if message.author.name != bot.user.name and message.content.lower() != 'terbaikkk' and message.content.lower() != 'ish' and rejus_bot.search(message.content.lower()) != True:
         await message.author.send(random.choice(threat))
+        print(message.author.nick + ' deleted the message \"' + message.content + '\"')
         
     await bot.process_commands(message)
 
