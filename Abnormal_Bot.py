@@ -59,7 +59,7 @@ async def on_message(message):
                     w.write(message.author.nick + ',' + str(1) + '\n')
         except:
             print('In the dms')
-    if n.search(message.content.lower()) != None and n2.search(message.content.lower()) != None and message.content.lower() != '!ncount':
+    if n.search(message.content.lower()) != None or n2.search(message.content.lower()) != None and message.content.lower() != '!ncount':
         try:
             count = []
             with open('n_count.txt','r') as r:
@@ -260,97 +260,111 @@ async def _8ball(ctx):
 #Connect 4
 @bot.command(name = 'connect4', help = 'A two player game where you place coins until one colour has 4 of their coins stacked contiguously in any direction')
 async def connect_4(ctx):
-    if ctx.guild.name == 'Abnormal title':
-        await ctx.send('Whoever wants to play, say \"me\"')
-        count = 0
+    emoji = ['1️⃣', '2️⃣', '3️⃣', '4️⃣', '5️⃣', '6️⃣', '7️⃣', '❌']
+    await ctx.send('Whoever wants to play, say \"me\"')
+    count = 0
 
-        #Checks if the reply is not from the original caller of the program and if it is from the same channel
-        def check(msg):
-            return msg.author != ctx.author and msg.channel == ctx.channel and count < 2 and msg.content.lower() == 'me'
-        try:
-            player = await bot.wait_for('message',timeout=20, check=check)
-            count += 1
-            #chooses who starts
-            await ctx.send('Heads blue starts, Tails red starts')
-            await asyncio.sleep(1)
-            await ctx.send('https://tenor.com/view/coin-toss-coin-toss-gif-5017733')
-            turn = random.choice([':red_circle:',':blue_circle:'])
-            await asyncio.sleep(1)
+    #Checks if the reply is not from the original caller of the program and if it is from the same channel
+    def check(msg):
+        return msg.author != ctx.author and msg.channel == ctx.channel and count < 2 and msg.content.lower() == 'me'
+    
+    try:
+        player = await bot.wait_for('message',timeout=20, check=check)
+        count += 1
+        #chooses who starts
+        await ctx.send('Heads blue starts, Tails red starts')
+        await asyncio.sleep(1)
+        await ctx.send('https://tenor.com/view/coin-toss-coin-toss-gif-5017733')
+        turn = random.choice([':red_circle:',':blue_circle:'])
+        await asyncio.sleep(1)
+        if turn == ':blue_circle:':
+                await ctx.send('Heads')
+        else:
+            await ctx.send('Tails')
+        await asyncio.sleep(2)
+        board = C4.get_board()
+        game_over = False
+        temp_board = []
+        for row in board:
+            temp_board.append(''.join(row)+'\n')
+        embed = discord.Embed(
+        title = f'{ctx.author.nick}(blue)/{player.author.nick}(red)',
+        description = (''.join(temp_board)),
+        colour = discord.Colour.dark_red()
+        )
+        display = await ctx.send(embed=embed)
+        for row in emoji:
+            await display.add_reaction(row)
+        tell = await ctx.send('Place your ' + turn + ', from 1-7')
+
+        while game_over == False:
+            await tell.edit(content = 'Place your ' + turn + ', from 1-7')
             if turn == ':blue_circle:':
-                    await ctx.send('Heads')
+                player_turn = ctx.author
             else:
-                await ctx.send('Tails')
-            await asyncio.sleep(1)
-            board = C4.get_board()
-            game_over = False
-            temp_board = []
-            for row in board:
-                temp_board.append(''.join(row)+'\n')
-            embed = discord.Embed(
-            title = f'{ctx.author.nick}(blue)/{player.author.nick}(red)',
-            description = (''.join(temp_board)),
-            colour = discord.Colour.dark_red()
-            )
-            await ctx.send(embed=embed)
+                player_turn = player.author
+                
+            def check(reaction, user):
+                return user == player_turn 
 
-            while game_over == False:
-                await ctx.send('Place your ' + turn + ', from 1-7')
-                if turn == ':blue_circle:':
-                    player_turn = ctx.author.nick
-                else:
-                    player_turn = player.author.nick
-                    
-                def check(msg):
-                    return msg.author.nick == player_turn and msg.channel == ctx.channel
+            try:
+                answer = await bot.wait_for('reaction_add',timeout = 120, check=check)
+                reaction = str(answer[0])
+                
+                if reaction == '❌':
+                    if answer[1] == player.author:
+                        await tell.edit(content = f'**{ctx.author.nick} wins by forfeit**')
+                        game_over = True
+                        C4.save(ctx.author.nick, player.author.nick)
+                        break
+                    else:
+                        await tell.edit(content = f'**{player.author.nick} wins by forfeit**')
+                        game_over = True
+                        C4.save(player.author.nick, ctx.author.nick)
+                        break
+                
 
                 try:
-                    answer = await bot.wait_for('message',timeout = 120, check=check)
-                    if answer.content.lower() == 'forfeit':
-                        if answer.author.nick == player.author.nick:
-                            await ctx.send(f'**{ctx.author.nick} wins by forfeit**')
+                    number = (int(reaction[0]) - 1)
+                    move = C4.check_move(board, number)
+                    if move == False:
+                        await ctx.send('invalid move, Column has been filled.')
+                    else:
+                        board[int(move)][number] = turn
+                        turn = C4.change_turn(turn)
+                        temp_board = []
+                        for row in board:
+                            temp_board.append(''.join(row)+'\n')
+                        embed = discord.Embed(
+                        title = f'{ctx.author.nick}(blue)/{player.author.nick}(red)',
+                        description = (''.join(temp_board)),
+                        colour = discord.Colour.dark_red()
+                        )
+                        await display.edit(embed=embed)
+                        await display.remove_reaction(reaction, player_turn)
+                        if C4.check_win(board) == ':blue_circle:':
+                            await tell.edit(content = f'**{ctx.author.nick} won**')
                             game_over = True
                             C4.save(ctx.author.nick, player.author.nick)
-                            break
-                        else:
-                            await ctx.send(f'**{player.author.nick} wins by forfeit**')
+                        elif C4.check_win(board) == ':red_circle:':
+                            await tell.edit(content = f'**{player.author.nick} won**')
                             game_over = True
                             C4.save(player.author.nick, ctx.author.nick)
-                            break
-                    try:
-                        move = C4.check_move(board, (int(answer.content)-1))
-                        if move == False:
-                            await ctx.send('invalid move, Column has been filled.')
-                        else:
-                            board[int(move)][int(answer.content)-1] = turn
-                            turn = C4.change_turn(turn)
-                            temp_board = []
-                            for row in board:
-                                temp_board.append(''.join(row)+'\n')
-                            embed = discord.Embed(
-                            title = f'{ctx.author.nick}(blue)/{player.author.nick}(red)',
-                            description = (''.join(temp_board)),
-                            colour = discord.Colour.dark_red()
-                            )
-                            await ctx.send(embed=embed)
-                            if C4.check_win(board) == ':blue_circle:':
-                                await ctx.send(f'**{ctx.author.nick} won**')
-                                game_over = True
-                                C4.save(ctx.author.nick, player.author.nick)
-                            elif C4.check_win(board) == ':red_circle:':
-                                await ctx.send(f'**{player.author.nick} won**')
-                                game_over = True
-                                C4.save(player.author.nick, ctx.author.nick)
-                            elif C4.check_win(board) == 'Tie':
-                                await ctx.send('**It\'s a tie**')
-                                game_over = True
-                    except:
-                        await ctx.send('Invalid input, stop being a fool')
+                        elif C4.check_win(board) == 'Tie':
+                            await tell.edit(content = '**It\'s a tie**')
+                            game_over = True
+                            
                 except:
-                    await ctx.send('Ran out of time, Game over')
-                    game_over = True
+                    await tell.edit(content = '**Invalid input**, stop being a fool')
+                    await aysncio.sleep(3)
+                    await display.remove_reaction(reaction, player_turn)
+            except:
+                await ctx.send('Ran out of time, **Game over**')
+                game_over = True
                                    
-        except:
-            await ctx.send('No one wanted to play, get some friends')
+    except:
+        await ctx.send('No one wanted to play, get some friends')
+    
 
 #Gay count because rejus says it way too much
 @bot.command(name = 'gaycount', help = 'This is a count of how many times the word \"gay\" has been said')
@@ -401,59 +415,59 @@ async def connect4_leaderboard(ctx):
         #Checks if the reply is not from the original caller of the program and if it is from the same channel
         def check(msg):
             return msg.author == ctx.author and msg.channel == ctx.channel
-        #try:
-        answer = await bot.wait_for('message',timeout = 30, check=check)
-        if answer.content.lower() == 'overall':
-            scores = C4.load(answer.content)
-            embed = discord.Embed(
-                title = 'Connect 4 Leaderboard',
-                description = ('\n'.join(scores)),
-                colour = discord.Colour.dark_red()
-                )
-            await ctx.send(embed=embed)
-            
-        else:
-            if C4.load(answer.content.lower()) == None:
-                await ctx.send('Person does not exist or they have played 0 games')
-            else:
-                person = C4.load(answer.content.lower())
-                for member in ctx.guild.members:
-                    try:
-                        if member.nick.lower() == answer.content.lower():
-                            user = member.nick
-                            pfp = member.avatar_url
-                    except:
-                        print('false')
-                total = person[2]
-                wins = 0
-                loss = 0
-                count = 0
-                for i in range(3, len(person)):
-                    count += 1
-                    try:
-                        wins += int(person[i])
-                    except:
-                        print('name founded instead of number')
-                loss = int(total) - wins
-                count = count//2
-                if total == '0':
-                    ratio = '0'
-                elif loss == 0:
-                    ratio = str(wins)
-                else:
-                    ratio = str(round((wins/loss),2))
+        try:
+            answer = await bot.wait_for('message',timeout = 30, check=check)
+            if answer.content.lower() == 'overall':
+                scores = C4.load(answer.content)
                 embed = discord.Embed(
-                title = ('__' + user + '__'),
-                description = ('Total games: ' + person[2] + '\nTotal wins: ' + str(wins) + '\nW/L ratio: ' + ratio),
-                colour = discord.Colour.dark_red()
-                )
-                embed.set_thumbnail(url = pfp)
-                embed.set_author(name = 'Connect 4 leaderboard')
-                for i in range(0,count):
-                    embed.add_field(name = ('vs ' + person[i+3]), value = person[i+4], inline = True)
+                    title = 'Connect 4 Leaderboard',
+                    description = ('\n'.join(scores)),
+                    colour = discord.Colour.dark_red()
+                    )
                 await ctx.send(embed=embed)
-        #except:
-         #   await ctx.send('Ran out of time to answer')
+                
+            else:
+                if C4.load(answer.content.lower()) == None:
+                    await ctx.send('Person does not exist or they have played 0 games')
+                else:
+                    person = C4.load(answer.content.lower())
+                    for member in ctx.guild.members:
+                        try:
+                            if member.nick.lower() == answer.content.lower():
+                                user = member.nick
+                                pfp = member.avatar_url
+                        except:
+                            print('false')
+                    total = person[2]
+                    wins = 0
+                    loss = 0
+                    count = 0
+                    for i in range(3, len(person)):
+                        count += 1
+                        try:
+                            wins += int(person[i])
+                        except:
+                            print('name founded instead of number')
+                    loss = int(total) - wins
+                    count = count//2
+                    if total == '0':
+                        ratio = '0'
+                    elif loss == 0:
+                        ratio = str(wins)
+                    else:
+                        ratio = str(round((wins/loss),2))
+                    embed = discord.Embed(
+                    title = ('__' + user + '__'),
+                    description = ('Total games: ' + person[2] + '\nTotal wins: ' + str(wins) + '\nW/L ratio: ' + ratio),
+                    colour = discord.Colour.dark_red()
+                    )
+                    embed.set_thumbnail(url = pfp)
+                    embed.set_author(name = 'Connect 4 leaderboard')
+                    for i in range(0,count):
+                        embed.add_field(name = ('vs ' + person[i+3]), value = person[i+4], inline = True)
+                    await ctx.send(embed=embed)
+        except:
+            await ctx.send('Ran out of time to answer')
 
         
 
