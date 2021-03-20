@@ -79,7 +79,7 @@ async def on_message(message):
 async def on_message_delete(message):
     if message.author.name != bot.user.name and message.content.lower() != 'terbaikkk' and message.content.lower() != 'ish' and rejus_bot.search(message.content.lower()) != True:
         await message.author.send(random.choice(threat))
-        print(message.author.nick + ' deleted the message \"' + message.content + '\"')
+        print(message.author.name + ' deleted the message \"' + message.content + '\"')
         
     await bot.process_commands(message)
 
@@ -139,7 +139,7 @@ async def game_decider(ctx):
             elif answer.content.lower() == 'no':
                 await ctx.send('Alrighty then')
             #restart percentages
-            elif answer.content.lower() == 'restart percentages' and answer.author.nick == 'Anhar':
+            elif answer.content.lower() == 'restart percentages' and answer.author.name == 'Banthar':
                 os.remove('Data.txt')
                 await ctx.send('Percentages have been refreshed')
             #Invalid inputs
@@ -175,9 +175,9 @@ async def rsp(ctx):
             winner = RPS.compare(answer1.content.lower(),answer1.author.name, answer2.content.lower(),answer2.author.name)
             #Compares the results and find the winner or if it is a tie
             if winner == ctx.author.name:
-                await ctx.send(ctx.author.nick + ' won!')
+                await ctx.send(ctx.author.name + ' won!')
             elif winner == answer.author.name:
-                await ctx.send(answer.author.nick + ' won!')
+                await ctx.send(answer.author.name + ' won!')
             elif winner == 'It\'s a tie!':
                 await ctx.send('It\'s a tie!')
             else:
@@ -197,11 +197,14 @@ async def coin_flip(ctx):
 #displays all the robo bot commands
 @bot.command(name = 'commands', help = 'displays all the commands Robo Bot serves')
 async def commands(ctx):
+    user = await bot.fetch_user(814136775496302683)
+    pfp = user.avatar_url
     embed = discord.Embed(
-            title = 'Robo Bot Commands',
+            title = 'Abnormal Bot Commands',
             description = ('\n'.join(command)),
             colour = discord.Colour.dark_red()
             )
+    embed.set_thumbnail(url = pfp)
     await ctx.send(embed=embed)
 
 #post 2 gifs to cover the screen
@@ -232,7 +235,7 @@ async def connect_4(ctx):
         player = await bot.wait_for('message',timeout=20, check=check)
         count += 1
         #chooses who starts
-        await ctx.send(f'Heads {ctx.author.nick} starts, Tails {player.author.nick} starts')
+        await ctx.send(f'Heads {ctx.author.name} starts, Tails {player.author.name} starts')
         await asyncio.sleep(1)
         await ctx.send('https://tenor.com/view/coin-toss-coin-toss-gif-5017733')
         turn = random.choice([':red_circle:',':blue_circle:'])
@@ -248,7 +251,7 @@ async def connect_4(ctx):
         for row in board:
             temp_board.append(''.join(row)+'\n')
         embed = discord.Embed(
-        title = f'{ctx.author.nick}(blue)/{player.author.nick}(red)',
+        title = f'{ctx.author.name}(:blue_circle:)/{player.author.name}(:red_circle:)',
         description = (''.join(temp_board)),
         colour = discord.Colour.dark_red()
         )
@@ -273,11 +276,11 @@ async def connect_4(ctx):
                 
                 if reaction == '❌':
                     if answer[1] == player.author:
-                        await tell.edit(content = f'**{ctx.author.nick} wins by forfeit**')
+                        await tell.edit(content = f'**{ctx.author.name} wins by forfeit**')
                         game_over = True
                         break
                     else:
-                        await tell.edit(content = f'**{player.author.nick} wins by forfeit**')
+                        await tell.edit(content = f'**{player.author.name} wins by forfeit**')
                         game_over = True
                         break
                 
@@ -294,17 +297,17 @@ async def connect_4(ctx):
                         for row in board:
                             temp_board.append(''.join(row)+'\n')
                         embed = discord.Embed(
-                        title = f'{ctx.author.nick}(blue)/{player.author.nick}(red)',
+                        title = f'{ctx.author.name}(:blue_circle:)/{player.author.name}(:red_circle:)',
                         description = (''.join(temp_board)),
                         colour = discord.Colour.dark_red()
                         )
                         await display.edit(embed=embed)
                         await display.remove_reaction(reaction, player_turn)
                         if C4.check_win(board) == ':blue_circle:':
-                            await tell.edit(content = f'**{ctx.author.nick} won**')
+                            await tell.edit(content = f'**{ctx.author.name} won**')
                             game_over = True
                         elif C4.check_win(board) == ':red_circle:':
-                            await tell.edit(content = f'**{player.author.nick} won**')
+                            await tell.edit(content = f'**{player.author.name} won**')
                             game_over = True
                         elif C4.check_win(board) == 'Tie':
                             await tell.edit(content = '**It\'s a tie**')
@@ -312,10 +315,10 @@ async def connect_4(ctx):
                             
                 except:
                     await tell.edit(content = 'What a dumbass adding more emojis, repent for 5 seconds dipshit')
-                    await aysncio.sleep(5)
+                    await aysncio.sleep(9)
                     await display.remove_reaction(reaction, player_turn)
             except:
-                await ctx.send('Ran out of time, **Game over**')
+                await ctx.send('dude dashed, **Game over**')
                 game_over = True
                                    
     except:
@@ -337,7 +340,7 @@ async def uttt(ctx):
         player = await bot.wait_for('message',timeout=20, check=check)
         count += 1
         #chooses who starts
-        await ctx.send(f'Heads {ctx.author.nick} starts, Tails {player.author.nick} starts')
+        await ctx.send(f'Heads {ctx.author.name} starts, Tails {player.author.name} starts')
         await asyncio.sleep(1)
         await ctx.send('https://tenor.com/view/coin-toss-coin-toss-gif-5017733')
         turn = random.choice([':x:',':o:'])
@@ -352,7 +355,7 @@ async def uttt(ctx):
         game_over = False
         mode = 'free'
         embed = discord.Embed(
-        title = f'{ctx.author.nick}(:x:)/{player.author.nick}(:o:)',
+        title = f'{ctx.author.name}(:x:)/{player.author.name}(:o:)',
         description = TTT.display(board),
         colour = discord.Colour.dark_red()
         )
@@ -370,11 +373,11 @@ async def uttt(ctx):
                 player_turn = player.author
                 
             embed = discord.Embed(
-            title = f'{ctx.author.nick}(:x:)/{player.author.nick}(:o:)',
+            title = f'{ctx.author.name}(:x:)/{player.author.name}(:o:)',
             description = TTT.display(board),
             colour = discord.Colour.dark_red()
             )
-            embed.set_footer(text = f'It is {player_turn.nick}\'s turn')
+            embed.set_footer(text = f'It is {player_turn.name}\'s turn')
             await display.edit(embed=embed)
             
 
@@ -393,11 +396,11 @@ async def uttt(ctx):
 
                     if reaction == '❌':
                         if answer[1] == player.author:
-                            await ask.edit(content = f'**{ctx.author.nick} wins by forfeit**')
+                            await ask.edit(content = f'**{ctx.author.name} wins by forfeit**')
                             game_over = True
                             break
                         else:
-                            await ask.edit(content = f'**{player.author.nick} wins by forfeit**')
+                            await ask.edit(content = f'**{player.author.name} wins by forfeit**')
                             game_over = True
                             break
                     try:
@@ -417,11 +420,11 @@ async def uttt(ctx):
 
                             if reaction == '❌':
                                 if answer[1] == player.author:
-                                    await ask.edit(content = f'**{ctx.author.nick} wins by forfeit**')
+                                    await ask.edit(content = f'**{ctx.author.name} wins by forfeit**')
                                     game_over = True
                                     break
                                 else:
-                                    await ask.edit(content = f'**{player.author.nick} wins by forfeit**')
+                                    await ask.edit(content = f'**{player.author.name} wins by forfeit**')
                                     game_over = True
                                     break
 
@@ -442,11 +445,11 @@ async def uttt(ctx):
 
                                     if reaction == '❌':
                                         if answer[1] == player.author:
-                                            await tell.edit(content = f'**{ctx.author.nick} wins by forfeit**')
+                                            await tell.edit(content = f'**{ctx.author.name} wins by forfeit**')
                                             game_over = True
                                             break
                                         else:
-                                            await tell.edit(content = f'**{player.author.nick} wins by forfeit**')
+                                            await tell.edit(content = f'**{player.author.name} wins by forfeit**')
                                             game_over = True
                                             break
 
@@ -467,11 +470,11 @@ async def uttt(ctx):
 
                                             if reaction == '❌':
                                                 if answer[1] == player.author:
-                                                    await tell.edit(content = f'**{ctx.author.nick} wins by forfeit**')
+                                                    await tell.edit(content = f'**{ctx.author.name} wins by forfeit**')
                                                     game_over = True
                                                     break
                                                 else:
-                                                    await tell.edit(content = f'**{player.author.nick} wins by forfeit**')
+                                                    await tell.edit(content = f'**{player.author.name} wins by forfeit**')
                                                     game_over = True
                                                     break
 
@@ -489,15 +492,15 @@ async def uttt(ctx):
                                                             
                                                         if TTT.check_win(board_backend) == turn: #Check big grid win
                                                             if turn == ':x:':
-                                                                await ask.edit(content = f'**{ctx.author.nick} won**')
+                                                                await ask.edit(content = f'**{ctx.author.name} won**')
                                                             else:
-                                                                await ask.edit(content = f'**{player.author.nick} won**')
+                                                                await ask.edit(content = f'**{player.author.name} won**')
                                                             embed = discord.Embed(
-                                                            title = f'{ctx.author.nick}(:x:)/{player.author.nick}(:o:)',
+                                                            title = f'{ctx.author.name}(:x:)/{player.author.name}(:o:)',
                                                             description = TTT.display(board),
                                                             colour = discord.Colour.dark_red()
                                                             )
-                                                            embed.set_footer(text = f'It is {player_turn.nick}\'s turn')
+                                                            embed.set_footer(text = f'It is {player_turn.name}\'s turn')
                                                             await display.edit(embed=embed)
                                                             game_over = True
 
@@ -512,15 +515,15 @@ async def uttt(ctx):
                                                                 await ask.edit(content = 'Its a tie')
                                                             else:
                                                                 if big_tie == ':x:':
-                                                                    await ask.edit(content = f'**{ctx.author.nick} won**')
+                                                                    await ask.edit(content = f'**{ctx.author.name} won**')
                                                                 else:
-                                                                    await ask.edit(content = f'**{player.author.nick} won**')
+                                                                    await ask.edit(content = f'**{player.author.name} won**')
                                                             embed = discord.Embed(
-                                                            title = f'{ctx.author.nick}(:x:)/{player.author.nick}(:o:)',
+                                                            title = f'{ctx.author.name}(:x:)/{player.author.name}(:o:)',
                                                             description = TTT.display(board),
                                                             colour = discord.Colour.dark_red()
                                                             )
-                                                            embed.set_footer(text = f'It is {player_turn.nick}\'s turn')
+                                                            embed.set_footer(text = f'It is {player_turn.name}\'s turn')
                                                             await display.edit(embed=embed)
                                                             game_over = True
                                                             
@@ -534,28 +537,28 @@ async def uttt(ctx):
 
                                                 else:
                                                     await ask.edit(content = 'You are retarded, so retarded that you lose a turn')
-                                                    await asyncio.sleep(3)
+                                                    await asyncio.sleep(5)
                                                     turn = TTT.change_turn(turn)
                                             except:
                                                 await ask.edit(content = 'What a dumbass adding more emojis, repent for 5 seconds dipshit')
                                                 await asyncio.sleep(9)
                                                 await display.remove_reaction(reaction, player_turn)
                                         except:
-                                            await ask.edit(content = 'Ran out of time, **Game Over**')
+                                            await ask.edit(content = 'Slow as a turtle, **Game Over**')
                                             game_over = True
                                     except:
                                         await ask.edit(content = 'What a dumbass adding more emojis, repent for 5 seconds dipshit')
                                         await asyncio.sleep(9)
                                         await display.remove_reaction(reaction, player_turn)
                                 except:
-                                    await ask.edit(content = 'Ran out of time, **Game Over**')
+                                    await ask.edit(content = 'Slower than a sloth, **Game Over**')
                                     game_over = True    
                             except:
                                 await ask.edit(content = 'What a dumbass adding more emojis, repent for 5 seconds dipshit')
                                 await asyncio.sleep(9)
                                 await display.remove_reaction(reaction, player_turn)
                         except:
-                            await ask.edit(content = 'Ran out of time, **Game Over**')
+                            await ask.edit(content = 'Time caught up, **Game Over**')
                             game_over = True
                     except:
                         await ask.edit(content = 'What a dumbass adding more emojis, repent for 5 seconds dipshit')
@@ -582,11 +585,11 @@ async def uttt(ctx):
 
                     if reaction == '❌':
                         if answer[1] == player.author:
-                            await ask.edit(content = f'**{ctx.author.nick} wins by forfeit**')
+                            await ask.edit(content = f'**{ctx.author.name} wins by forfeit**')
                             game_over = True
                             break
                         else:
-                            await ask.edit(content = f'**{player.author.nick} wins by forfeit**')
+                            await ask.edit(content = f'**{player.author.name} wins by forfeit**')
                             game_over = True
                             break
 
@@ -606,11 +609,11 @@ async def uttt(ctx):
 
                             if reaction == '❌':
                                 if answer[1] == player.author:
-                                    await ask.edit(content = f'**{ctx.author.nick} wins by forfeit**')
+                                    await ask.edit(content = f'**{ctx.author.name} wins by forfeit**')
                                     game_over = True
                                     break
                                 else:
-                                    await ask.edit(content = f'**{player.author.nick} wins by forfeit**')
+                                    await ask.edit(content = f'**{player.author.name} wins by forfeit**')
                                     game_over = True
                                     break
                             try:    
@@ -626,15 +629,15 @@ async def uttt(ctx):
                                     
                                     if TTT.check_win(board_backend) == turn: #check big win
                                         if turn == ':x:':
-                                            await ask.edit(content = f'**{ctx.author.nick} won**')
+                                            await ask.edit(content = f'**{ctx.author.name} won**')
                                         else:
-                                            await ask.edit(content = f'**{player.author.nick} won**')
+                                            await ask.edit(content = f'**{player.author.name} won**')
                                         embed = discord.Embed(
-                                        title = f'{ctx.author.nick}(:x:)/{player.author.nick}(:o:)',
+                                        title = f'{ctx.author.name}(:x:)/{player.author.name}(:o:)',
                                         description = TTT.display(board),
                                         colour = discord.Colour.dark_red()
                                         )
-                                        embed.set_footer(text = f'It is {player_turn.nick}\'s turn')
+                                        embed.set_footer(text = f'It is {player_turn.name}\'s turn')
                                         await display.edit(embed=embed)
                                         game_over = True
                                         
@@ -649,15 +652,15 @@ async def uttt(ctx):
                                             await ask.edit(content = 'Its a tie')
                                         else:
                                             if big_tie == ':x:':
-                                                await ask.edit(content = f'**{ctx.author.nick} won**')
+                                                await ask.edit(content = f'**{ctx.author.name} won**')
                                             else:
-                                                await ask.edit(content = f'**{player.author.nick} won**')
+                                                await ask.edit(content = f'**{player.author.name} won**')
                                         embed = discord.Embed(
-                                        title = f'{ctx.author.nick}(:x:)/{player.author.nick}(:o:)',
+                                        title = f'{ctx.author.name}(:x:)/{player.author.name}(:o:)',
                                         description = TTT.display(board),
                                         colour = discord.Colour.dark_red()
                                         )
-                                        embed.set_footer(text = f'It is {player_turn.nick}\'s turn')
+                                        embed.set_footer(text = f'It is {player_turn.name}\'s turn')
                                         await display.edit(embed=embed)
                                         game_over = True
                                         
@@ -673,13 +676,13 @@ async def uttt(ctx):
                                 await ask.edit(content = 'What a dumbass adding more emojis, repent for 5 seconds dipshit')
                                 await asyncio.sleep(9)
                         except:
-                            await ask.edit(content = 'Ran out of time, **Game Over**')
+                            await ask.edit(content = 'Too slow, **Game Over**')
                             game_over = True
                     except:
                         await ask.edit(content = 'What a dumbass adding more emojis, repent for 5 seconds dipshit')
                         await asyncio.sleep(9)
                 except:
-                    await ask.edit(content = 'Ran out of time, **Game Over**')
+                    await ask.edit(content = 'Slow ass peasant, **Game Over**')
                     game_over = True
                                            
     except:
