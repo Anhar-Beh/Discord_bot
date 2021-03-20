@@ -1,4 +1,0 @@
-Syed,total,3,Faizan,2
-Faizan,total,4,Syed,1,Anhar,1
-Anhar,total,3,Hassan,1
-Hassan,total,2,Anhar,1

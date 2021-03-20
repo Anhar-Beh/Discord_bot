@@ -7,19 +7,17 @@ from discord.ext import commands
 import Games_Decider as GD
 import Rock_Paper_Scissor as RPS
 import Connect_4 as C4
+import Ultimate_Tic_Tac_Toe as TTT
 
 TOKEN = 'ODE0MTM2Nzc1NDk2MzAyNjgz.YDZd9Q.SEYFfP3CSmNAeg6deX4dD11mOP8'
 
 intents = discord.Intents.all()
 bot = commands.Bot(command_prefix='!', intents=intents)
 
-gay = re.compile('gay')
 rejus_bot = re.compile('|')
-n = re.compile('nigga')
-n2 = re.compile('nigger')
 
-threat = ['I saw that', 'What you deleting bro', 'I know', 'What you doing boy?', 'Anhar may not know, but I know', 'I\'m always watching you', 'Very sus', 'hmmm interesting']
-command = ['!commands','!gamedecider', '!rockpaperscissors', '!coinflip', '!cleanup', '!8ball', '!connect4', '!gaycount', '!ncount', '!c4leaderboard']
+threat = ['I saw that', 'What you deleting', 'I know', 'What you doing?', 'Anhar may not know, but I know', 'I\'m always watching you', 'Very sus', 'hmmm interesting', 'Kinda sad really?', 'I\'m always watching']
+command = ['!commands','!gamedecider', '!rockpaperscissors', '!coinflip', '!cleanup', '!8ball', '!connect4', '!uttt']
 _8ball_ans = ['It is certain.', 'It is decidedly so.', 'Without a doubt.', 'Yes - definitely.', 'You may rely on it.', 'As I see it, yes.', 'Most likely.', 'Outlook good.', 'Yes.', 'Signs point to yes.', 'Reply hazy, try again.', 'Ask again later.', 'Cannot predict now.', 'Concentrate and ask again.', 'Don\'t count on it.', 'My reply is no.', 'My sources say no.', 'Outlook not so good.', 'Very doubtful.'] 
 ##################################################################### Events ###############################################################################################################
 @bot.event
@@ -40,44 +38,7 @@ async def on_message(message):
     if message.content.lower().startswith('terbaikkk'):
         await message.delete()
         await message.channel.send('https://tenor.com/view/tunm-mahathir-tun-bersatu-ppbm-gif-9852429')
-    if gay.search(message.content.lower()) != None and message.content.lower() != '!gaycount':
-        try:
-            count = []
-            with open('Gay_count.txt','r') as r:
-                info = r.readlines()
-                for row in info:
-                    cleanUp = row.strip('\n').split(',')
-                    count.append([cleanUp[0], cleanUp[1]])
-            with open('Gay_count.txt','w') as w:
-                found = False
-                for row in count:
-                    if row[0].lower() == message.author.nick.lower():
-                        row[1] = str(int(row[1])+1)
-                        found = True
-                        w.write(row[0] + ',' + row[1] + '\n')
-                if found == False:
-                    w.write(message.author.nick + ',' + str(1) + '\n')
-        except:
-            print('In the dms')
-    if n.search(message.content.lower()) != None or n2.search(message.content.lower()) != None and message.content.lower() != '!ncount':
-        try:
-            count = []
-            with open('n_count.txt','r') as r:
-                info = r.readlines()
-                for row in info:
-                    cleanUp = row.strip('\n').split(',')
-                    count.append([cleanUp[0], cleanUp[1]])
-            with open('n_count.txt','w') as w:
-                found = False
-                for row in count:
-                    if row[0].lower() == message.author.nick.lower():
-                        row[1] = str(int(row[1])+1)
-                        found = True
-                        w.write(row[0] + ',' + row[1] + '\n')
-                if found == False:
-                    w.write(message.author.nick + ',' + str(1) + '\n')
-        except:
-            print('In the dms')
+    
                 
 ## In case rejus betrays me ##################################################
 ##    if message.author.name == 'Emeraldsheep':
@@ -191,41 +152,40 @@ async def game_decider(ctx):
 #Rock Paper Scissors
 @bot.command(name = 'rockpaperscissors', help = 'Classis game of rock paper scissors')
 async def rsp(ctx):
-    if ctx.guild.name == 'Abnormal title':
-        await ctx.send('Whoever wants to play, say \"me\"')
-        count = 0
+    await ctx.send('Whoever wants to play, say \"me\"')
+    count = 0
 
-        #Checks if the reply is not from the original caller of the program and if it is from the same channel
+    #Checks if the reply is not from the original caller of the program and if it is from the same channel
+    def check(msg):
+        return msg.author != ctx.author and msg.channel == ctx.channel and count < 2 and msg.content.lower() == 'me'
+
+    try:
+        answer = await bot.wait_for('message',timeout=20, check=check)
+        count += 1
+        await ctx.author.send('Choose between rock, paper or scissors')
+        await answer.author.send('Choose between rock, paper or scissors')
+
+        #checks the answers are from the players 
         def check(msg):
-            return msg.author != ctx.author and msg.channel == ctx.channel and count < 2 and msg.content.lower() == 'me'
-
+            return msg.author.name == ctx.author.name or msg.author.name == answer.author.name
+    
         try:
-            answer = await bot.wait_for('message',timeout=20, check=check)
-            count += 1
-            await ctx.author.send('Choose between rock, paper or scissors')
-            await answer.author.send('Choose between rock, paper or scissors')
-
-            #checks the answers are from the players 
-            def check(msg):
-                return msg.author.name == ctx.author.name or msg.author.name == answer.author.name
-        
-            try:
-                answer1 = await bot.wait_for('message',timeout=20, check=check)
-                answer2 = await bot.wait_for('message',timeout=20, check=check)
-                winner = RPS.compare(answer1.content.lower(),answer1.author.name, answer2.content.lower(),answer2.author.name)
-                #Compares the results and find the winner or if it is a tie
-                if winner == ctx.author.name:
-                    await ctx.send(ctx.author.nick + ' won!')
-                elif winner == answer.author.name:
-                    await ctx.send(answer.author.nick + ' won!')
-                elif winner == 'It\'s a tie!':
-                    await ctx.send('It\'s a tie!')
-                else:
-                    await ctx.send('One of you twats couldn\'t spell, try again')
-            except:
-                await ctx.send('One of you was too slow, try again')
+            answer1 = await bot.wait_for('message',timeout=20, check=check)
+            answer2 = await bot.wait_for('message',timeout=20, check=check)
+            winner = RPS.compare(answer1.content.lower(),answer1.author.name, answer2.content.lower(),answer2.author.name)
+            #Compares the results and find the winner or if it is a tie
+            if winner == ctx.author.name:
+                await ctx.send(ctx.author.nick + ' won!')
+            elif winner == answer.author.name:
+                await ctx.send(answer.author.nick + ' won!')
+            elif winner == 'It\'s a tie!':
+                await ctx.send('It\'s a tie!')
+            else:
+                await ctx.send('One of you twats couldn\'t spell, try again')
         except:
-            await ctx.send('No one wanted to play, get some friends')
+            await ctx.send('One of you was too slow, try again')
+    except:
+        await ctx.send('No one wanted to play, get some friends')
             
 #Coin flip simulator
 @bot.command(name = 'coinflip', help = 'simulate flipping a coin with complete unbiased random')
@@ -272,7 +232,7 @@ async def connect_4(ctx):
         player = await bot.wait_for('message',timeout=20, check=check)
         count += 1
         #chooses who starts
-        await ctx.send('Heads blue starts, Tails red starts')
+        await ctx.send(f'Heads {ctx.author.nick} starts, Tails {player.author.nick} starts')
         await asyncio.sleep(1)
         await ctx.send('https://tenor.com/view/coin-toss-coin-toss-gif-5017733')
         turn = random.choice([':red_circle:',':blue_circle:'])
@@ -315,12 +275,10 @@ async def connect_4(ctx):
                     if answer[1] == player.author:
                         await tell.edit(content = f'**{ctx.author.nick} wins by forfeit**')
                         game_over = True
-                        C4.save(ctx.author.nick, player.author.nick)
                         break
                     else:
                         await tell.edit(content = f'**{player.author.nick} wins by forfeit**')
                         game_over = True
-                        C4.save(player.author.nick, ctx.author.nick)
                         break
                 
 
@@ -345,18 +303,16 @@ async def connect_4(ctx):
                         if C4.check_win(board) == ':blue_circle:':
                             await tell.edit(content = f'**{ctx.author.nick} won**')
                             game_over = True
-                            C4.save(ctx.author.nick, player.author.nick)
                         elif C4.check_win(board) == ':red_circle:':
                             await tell.edit(content = f'**{player.author.nick} won**')
                             game_over = True
-                            C4.save(player.author.nick, ctx.author.nick)
                         elif C4.check_win(board) == 'Tie':
                             await tell.edit(content = '**It\'s a tie**')
                             game_over = True
                             
                 except:
-                    await tell.edit(content = '**Invalid input**, stop being a fool')
-                    await aysncio.sleep(3)
+                    await tell.edit(content = 'What a dumbass adding more emojis, repent for 5 seconds dipshit')
+                    await aysncio.sleep(5)
                     await display.remove_reaction(reaction, player_turn)
             except:
                 await ctx.send('Ran out of time, **Game over**')
@@ -366,110 +322,369 @@ async def connect_4(ctx):
         await ctx.send('No one wanted to play, get some friends')
     
 
-#Gay count because rejus says it way too much
-@bot.command(name = 'gaycount', help = 'This is a count of how many times the word \"gay\" has been said')
-async def gay_count(ctx):
-    if ctx.guild.name == 'Abnormal title':
-        count = []
-        gay_list = []
-        with open('Gay_count.txt','r') as r:
-            info = r.readlines()
-            for row in info:
-                cleanUp = row.strip('\n').split(',')
-                count.append([cleanUp[0], cleanUp[1]])
-        for row in count:
-            gay_list.append(row[0] + ' has said \"gay\" ' + row[1] + ' times')
+
+@bot.command(name = 'uttt', help = 'A variation of Tic Tac Toe and explaining how to play is a pain so please watch this video https://youtu.be/37PC0bGMiTI but there will be two more rules: If you are sent to a won square then you can go anywhere, In a event of a tie, the person with the most square wins')
+async def uttt(ctx):
+    await ctx.send('Whoever wants to play, say \"me\"')
+    count = 0
+
+    #Checks if the reply is not from the original caller of the program and if it is from the same channel
+    def check(msg):
+        return msg.author != ctx.author and msg.channel == ctx.channel and count < 2 and msg.content.lower() == 'me'
+    
+    try:
+        emoji = ['1️⃣', '2️⃣', '3️⃣', '❌']
+        player = await bot.wait_for('message',timeout=20, check=check)
+        count += 1
+        #chooses who starts
+        await ctx.send(f'Heads {ctx.author.nick} starts, Tails {player.author.nick} starts')
+        await asyncio.sleep(1)
+        await ctx.send('https://tenor.com/view/coin-toss-coin-toss-gif-5017733')
+        turn = random.choice([':x:',':o:'])
+        await asyncio.sleep(1)
+        if turn == ':x:':
+                await ctx.send('Heads')
+        else:
+            await ctx.send('Tails')
+        await asyncio.sleep(2)
+        board = TTT.get_board()
+        board_backend = TTT.get_backend()
+        game_over = False
+        mode = 'free'
         embed = discord.Embed(
-                title = 'Gay count',
-                description = ('\n'.join(gay_list)),
-                colour = discord.Colour.dark_red()
-                )
-        await ctx.send(embed=embed)
+        title = f'{ctx.author.nick}(:x:)/{player.author.nick}(:o:)',
+        description = TTT.display(board),
+        colour = discord.Colour.dark_red()
+        )
+        embed.set_footer(text = 'Pending')
+        display = await ctx.send(embed=embed)
+        for row in emoji:
+            await display.add_reaction(row)
+        tell_mode = await ctx.send('You can move anywhere')
+        ask = await ctx.send('Pending')
 
-#N word count cuz josh asked for it
-@bot.command(name = 'ncount', help = 'This is a count of how many times the word \"nigga\" has been said')
-async def n_count(ctx):
-    if ctx.guild.name == 'Abnormal title':
-        count = []
-        n_list = []
-        with open('n_count.txt','r') as r:
-            info = r.readlines()
-            for row in info:
-                cleanUp = row.strip('\n').split(',')
-                count.append([cleanUp[0], cleanUp[1]])
-        for row in count:
-            n_list.append(row[0] + ' has said the N word ' + row[1] + ' times')
-        embed = discord.Embed(
-                title = 'N word count',
-                description = ('\n'.join(n_list)),
-                colour = discord.Colour.dark_red()
-                )
-        await ctx.send(embed=embed)
-
-#Connect 4 leaderboard
-@bot.command(name = 'c4leaderboard' , help = 'displays the Connect 4 leaderboard')
-async def connect4_leaderboard(ctx):
-    if ctx.guild.name == 'Abnormal title':
-        await ctx.send('Choose between "overall" or say someone\'s name')
-
-        #Checks if the reply is not from the original caller of the program and if it is from the same channel
-        def check(msg):
-            return msg.author == ctx.author and msg.channel == ctx.channel
-        try:
-            answer = await bot.wait_for('message',timeout = 30, check=check)
-            if answer.content.lower() == 'overall':
-                scores = C4.load(answer.content)
-                embed = discord.Embed(
-                    title = 'Connect 4 Leaderboard',
-                    description = ('\n'.join(scores)),
-                    colour = discord.Colour.dark_red()
-                    )
-                await ctx.send(embed=embed)
-                
+        while game_over == False:
+            if turn == ':x:':
+                player_turn = ctx.author
             else:
-                if C4.load(answer.content.lower()) == None:
-                    await ctx.send('Person does not exist or they have played 0 games')
-                else:
-                    person = C4.load(answer.content.lower())
-                    for member in ctx.guild.members:
-                        try:
-                            if member.nick.lower() == answer.content.lower():
-                                user = member.nick
-                                pfp = member.avatar_url
-                        except:
-                            print('false')
-                    total = person[2]
-                    wins = 0
-                    loss = 0
-                    count = 0
-                    for i in range(3, len(person)):
-                        count += 1
-                        try:
-                            wins += int(person[i])
-                        except:
-                            print('name founded instead of number')
-                    loss = int(total) - wins
-                    count = count//2
-                    if total == '0':
-                        ratio = '0'
-                    elif loss == 0:
-                        ratio = str(wins)
-                    else:
-                        ratio = str(round((wins/loss),2))
-                    embed = discord.Embed(
-                    title = ('__' + user + '__'),
-                    description = ('Total games: ' + person[2] + '\nTotal wins: ' + str(wins) + '\nW/L ratio: ' + ratio),
-                    colour = discord.Colour.dark_red()
-                    )
-                    embed.set_thumbnail(url = pfp)
-                    embed.set_author(name = 'Connect 4 leaderboard')
-                    for i in range(0,count):
-                        embed.add_field(name = ('vs ' + person[i+3]), value = person[i+4], inline = True)
-                    await ctx.send(embed=embed)
-        except:
-            await ctx.send('Ran out of time to answer')
+                player_turn = player.author
+                
+            embed = discord.Embed(
+            title = f'{ctx.author.nick}(:x:)/{player.author.nick}(:o:)',
+            description = TTT.display(board),
+            colour = discord.Colour.dark_red()
+            )
+            embed.set_footer(text = f'It is {player_turn.nick}\'s turn')
+            await display.edit(embed=embed)
+            
 
-        
+            if mode == 'free':
+                await tell_mode.edit(content = 'You can move anywhere')
+
+                try:
+                    #Row
+                    await ask.edit(content = 'Which big row?')
+
+                    def check(reaction, user):
+                        return user == player_turn 
+
+                    answer = await bot.wait_for('reaction_add',timeout = 180, check=check)
+                    reaction = str(answer[0])
+
+                    if reaction == '❌':
+                        if answer[1] == player.author:
+                            await ask.edit(content = f'**{ctx.author.nick} wins by forfeit**')
+                            game_over = True
+                            break
+                        else:
+                            await ask.edit(content = f'**{player.author.nick} wins by forfeit**')
+                            game_over = True
+                            break
+                    try:
+                        row = (int(reaction[0]) - 1)
+                        await display.remove_reaction(reaction, player_turn)
+                        
+                        try:
+                            #Col
+                            await ask.edit(content = 'Which big column?')
+
+                            def check(reaction, user):
+                                return user == player_turn 
+
+
+                            answer = await bot.wait_for('reaction_add',timeout = 180, check=check)
+                            reaction = str(answer[0])
+
+                            if reaction == '❌':
+                                if answer[1] == player.author:
+                                    await ask.edit(content = f'**{ctx.author.nick} wins by forfeit**')
+                                    game_over = True
+                                    break
+                                else:
+                                    await ask.edit(content = f'**{player.author.nick} wins by forfeit**')
+                                    game_over = True
+                                    break
+
+                            try:
+                                col = (int(reaction[0]) - 1)
+                                await display.remove_reaction(reaction, player_turn)
+                                
+                                try:
+                                    #move_row
+                                    await ask.edit(content = 'Which small row?')
+
+                                    def check(reaction, user):
+                                        return user == player_turn 
+
+
+                                    answer = await bot.wait_for('reaction_add',timeout = 180, check=check)
+                                    reaction = str(answer[0])
+
+                                    if reaction == '❌':
+                                        if answer[1] == player.author:
+                                            await tell.edit(content = f'**{ctx.author.nick} wins by forfeit**')
+                                            game_over = True
+                                            break
+                                        else:
+                                            await tell.edit(content = f'**{player.author.nick} wins by forfeit**')
+                                            game_over = True
+                                            break
+
+                                    try:
+                                        move_row = (int(reaction[0]) - 1)
+                                        await display.remove_reaction(reaction, player_turn)
+                                        
+                                        try:
+                                            #move_col
+                                            await ask.edit(content = 'Which small column?')
+
+                                            def check(reaction, user):
+                                                return user == player_turn 
+
+
+                                            answer = await bot.wait_for('reaction_add',timeout = 180, check=check)
+                                            reaction = str(answer[0])
+
+                                            if reaction == '❌':
+                                                if answer[1] == player.author:
+                                                    await tell.edit(content = f'**{ctx.author.nick} wins by forfeit**')
+                                                    game_over = True
+                                                    break
+                                                else:
+                                                    await tell.edit(content = f'**{player.author.nick} wins by forfeit**')
+                                                    game_over = True
+                                                    break
+
+                                            try:
+                                                move_col = (int(reaction[0]) - 1)
+                                                await display.remove_reaction(reaction, player_turn)
+
+                                                if board_backend[row][col] == ':black_large_square:':
+                                                    if board[row][col][move_row][move_col] == ':black_large_square:':
+                                                        board[row][col][move_row][move_col] = turn
+                                                        mode = TTT.check_mode(board_backend, move_row, move_col)
+
+                                                        if TTT.check_win(board[row][col]) == turn: # Check small grid win
+                                                            board_backend[row][col] = turn
+                                                            
+                                                        if TTT.check_win(board_backend) == turn: #Check big grid win
+                                                            if turn == ':x:':
+                                                                await ask.edit(content = f'**{ctx.author.nick} won**')
+                                                            else:
+                                                                await ask.edit(content = f'**{player.author.nick} won**')
+                                                            embed = discord.Embed(
+                                                            title = f'{ctx.author.nick}(:x:)/{player.author.nick}(:o:)',
+                                                            description = TTT.display(board),
+                                                            colour = discord.Colour.dark_red()
+                                                            )
+                                                            embed.set_footer(text = f'It is {player_turn.nick}\'s turn')
+                                                            await display.edit(embed=embed)
+                                                            game_over = True
+
+                                                        small_tie = TTT.check_tie(board[row][col], 'small')     #Checks for tie  
+                                                        big_tie = TTT.check_tie(board_backend, 'big')
+                                                        
+                                                        if small_tie != 'not tie':                  #Checks for small tie
+                                                            board_backend[row][col] = 'tie'
+                                                            
+                                                        if big_tie != 'not tie':                    #Checks for big tie
+                                                            if big_tie == 'tie':
+                                                                await ask.edit(content = 'Its a tie')
+                                                            else:
+                                                                if big_tie == ':x:':
+                                                                    await ask.edit(content = f'**{ctx.author.nick} won**')
+                                                                else:
+                                                                    await ask.edit(content = f'**{player.author.nick} won**')
+                                                            embed = discord.Embed(
+                                                            title = f'{ctx.author.nick}(:x:)/{player.author.nick}(:o:)',
+                                                            description = TTT.display(board),
+                                                            colour = discord.Colour.dark_red()
+                                                            )
+                                                            embed.set_footer(text = f'It is {player_turn.nick}\'s turn')
+                                                            await display.edit(embed=embed)
+                                                            game_over = True
+                                                            
+                                                        row = move_row
+                                                        col = move_col
+                                                        turn = TTT.change_turn(turn)
+                                                        
+                                                    else:
+                                                        await ask.edit(content = 'Coordinate occupied')
+                                                        await asyncio.sleep(2)
+
+                                                else:
+                                                    await ask.edit(content = 'You are retarded, so retarded that you lose a turn')
+                                                    await asyncio.sleep(3)
+                                                    turn = TTT.change_turn(turn)
+                                            except:
+                                                await ask.edit(content = 'What a dumbass adding more emojis, repent for 5 seconds dipshit')
+                                                await asyncio.sleep(9)
+                                                await display.remove_reaction(reaction, player_turn)
+                                        except:
+                                            await ask.edit(content = 'Ran out of time, **Game Over**')
+                                            game_over = True
+                                    except:
+                                        await ask.edit(content = 'What a dumbass adding more emojis, repent for 5 seconds dipshit')
+                                        await asyncio.sleep(9)
+                                        await display.remove_reaction(reaction, player_turn)
+                                except:
+                                    await ask.edit(content = 'Ran out of time, **Game Over**')
+                                    game_over = True    
+                            except:
+                                await ask.edit(content = 'What a dumbass adding more emojis, repent for 5 seconds dipshit')
+                                await asyncio.sleep(9)
+                                await display.remove_reaction(reaction, player_turn)
+                        except:
+                            await ask.edit(content = 'Ran out of time, **Game Over**')
+                            game_over = True
+                    except:
+                        await ask.edit(content = 'What a dumbass adding more emojis, repent for 5 seconds dipshit')
+                        await asyncio.sleep(9)
+                        await display.remove_reaction(reaction, player_turn)
+
+                except:
+                    await ask.edit(content = 'Ran out of time, **Game Over**')
+                    game_over = True
+
+            else:
+                await tell_mode.edit(content  = ('row ' + str(row + 1) + ' and column ' + str(col + 1)))
+
+                
+                #move_row
+                await ask.edit(content = 'Which small row?')
+
+                def check(reaction, user):
+                    return user == player_turn 
+
+                try:
+                    answer = await bot.wait_for('reaction_add',timeout = 180, check=check)
+                    reaction = str(answer[0])
+
+                    if reaction == '❌':
+                        if answer[1] == player.author:
+                            await ask.edit(content = f'**{ctx.author.nick} wins by forfeit**')
+                            game_over = True
+                            break
+                        else:
+                            await ask.edit(content = f'**{player.author.nick} wins by forfeit**')
+                            game_over = True
+                            break
+
+                    try:
+                        move_row = (int(reaction[0]) - 1)
+                        await display.remove_reaction(reaction, player_turn)
+
+                        #move_col
+                        await ask.edit(content = 'Which small column?')
+
+                        def check(reaction, user):
+                            return user == player_turn 
+
+                        try:
+                            answer = await bot.wait_for('reaction_add',timeout = 180, check=check)
+                            reaction = str(answer[0])
+
+                            if reaction == '❌':
+                                if answer[1] == player.author:
+                                    await ask.edit(content = f'**{ctx.author.nick} wins by forfeit**')
+                                    game_over = True
+                                    break
+                                else:
+                                    await ask.edit(content = f'**{player.author.nick} wins by forfeit**')
+                                    game_over = True
+                                    break
+                            try:    
+                                move_col = (int(reaction[0]) - 1)
+                                await display.remove_reaction(reaction, player_turn)
+                                
+                                if board[row][col][move_row][move_col] == ':black_large_square:':
+                                    board[row][col][move_row][move_col] = turn
+                                    mode = TTT.check_mode(board_backend, move_row, move_col)
+                                    
+                                    if TTT.check_win(board[row][col]) == turn: # Check small grid win
+                                        board_backend[row][col] = turn
+                                    
+                                    if TTT.check_win(board_backend) == turn: #check big win
+                                        if turn == ':x:':
+                                            await ask.edit(content = f'**{ctx.author.nick} won**')
+                                        else:
+                                            await ask.edit(content = f'**{player.author.nick} won**')
+                                        embed = discord.Embed(
+                                        title = f'{ctx.author.nick}(:x:)/{player.author.nick}(:o:)',
+                                        description = TTT.display(board),
+                                        colour = discord.Colour.dark_red()
+                                        )
+                                        embed.set_footer(text = f'It is {player_turn.nick}\'s turn')
+                                        await display.edit(embed=embed)
+                                        game_over = True
+                                        
+                                    small_tie = TTT.check_tie(board[row][col], 'small')     #Checks for tie  
+                                    big_tie = TTT.check_tie(board_backend, 'big')
+                                    
+                                    if small_tie != 'not tie':                  #Checks for small tie
+                                        board_backend[row][col] = 'tie'
+                                        
+                                    if big_tie != 'not tie':                    #Checks for big tie
+                                        if big_tie == 'tie':
+                                            await ask.edit(content = 'Its a tie')
+                                        else:
+                                            if big_tie == ':x:':
+                                                await ask.edit(content = f'**{ctx.author.nick} won**')
+                                            else:
+                                                await ask.edit(content = f'**{player.author.nick} won**')
+                                        embed = discord.Embed(
+                                        title = f'{ctx.author.nick}(:x:)/{player.author.nick}(:o:)',
+                                        description = TTT.display(board),
+                                        colour = discord.Colour.dark_red()
+                                        )
+                                        embed.set_footer(text = f'It is {player_turn.nick}\'s turn')
+                                        await display.edit(embed=embed)
+                                        game_over = True
+                                        
+                                    row = move_row
+                                    col = move_col
+                                    turn = TTT.change_turn(turn)
+                                    
+                                else:
+                                    await ask.edit(content = 'Coordinate is occupied')
+                                    await asyncio.sleep(2)
+
+                            except:
+                                await ask.edit(content = 'What a dumbass adding more emojis, repent for 5 seconds dipshit')
+                                await asyncio.sleep(9)
+                        except:
+                            await ask.edit(content = 'Ran out of time, **Game Over**')
+                            game_over = True
+                    except:
+                        await ask.edit(content = 'What a dumbass adding more emojis, repent for 5 seconds dipshit')
+                        await asyncio.sleep(9)
+                except:
+                    await ask.edit(content = 'Ran out of time, **Game Over**')
+                    game_over = True
+                                           
+    except:
+        await ctx.send('No one wanted to play, get some friends')
+
 
 
 ############################################################################################################################################################################################
