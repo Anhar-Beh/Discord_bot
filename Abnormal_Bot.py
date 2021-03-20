@@ -388,7 +388,7 @@ async def uttt(ctx):
                     def check(reaction, user):
                         return user == player_turn 
 
-                    answer = await bot.wait_for('reaction_add',timeout = 180, check=check)
+                    answer = await bot.wait_for('reaction_add',timeout = 120, check=check)
                     reaction = str(answer[0])
 
                     if reaction == '❌':
@@ -412,7 +412,7 @@ async def uttt(ctx):
                                 return user == player_turn 
 
 
-                            answer = await bot.wait_for('reaction_add',timeout = 180, check=check)
+                            answer = await bot.wait_for('reaction_add',timeout = 120, check=check)
                             reaction = str(answer[0])
 
                             if reaction == '❌':
@@ -437,7 +437,7 @@ async def uttt(ctx):
                                         return user == player_turn 
 
 
-                                    answer = await bot.wait_for('reaction_add',timeout = 180, check=check)
+                                    answer = await bot.wait_for('reaction_add',timeout = 120, check=check)
                                     reaction = str(answer[0])
 
                                     if reaction == '❌':
@@ -462,7 +462,7 @@ async def uttt(ctx):
                                                 return user == player_turn 
 
 
-                                            answer = await bot.wait_for('reaction_add',timeout = 180, check=check)
+                                            answer = await bot.wait_for('reaction_add',timeout = 120, check=check)
                                             reaction = str(answer[0])
 
                                             if reaction == '❌':
@@ -577,7 +577,7 @@ async def uttt(ctx):
                     return user == player_turn 
 
                 try:
-                    answer = await bot.wait_for('reaction_add',timeout = 180, check=check)
+                    answer = await bot.wait_for('reaction_add',timeout = 120, check=check)
                     reaction = str(answer[0])
 
                     if reaction == '❌':
@@ -601,7 +601,7 @@ async def uttt(ctx):
                             return user == player_turn 
 
                         try:
-                            answer = await bot.wait_for('reaction_add',timeout = 180, check=check)
+                            answer = await bot.wait_for('reaction_add',timeout = 120, check=check)
                             reaction = str(answer[0])
 
                             if reaction == '❌':
