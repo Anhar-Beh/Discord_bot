@@ -22,11 +22,9 @@ _8ball_ans = ['It is certain.', 'It is decidedly so.', 'Without a doubt.', 'Yes 
 ##################################################################### Events ###############################################################################################################
 @bot.event
 async def on_ready():
-    guild = discord.utils.get(bot.guilds, name='Abnormal title')
-    print(
-        f'{bot.user.name} is connected to the following guild:\n'
-        f'{guild.name}'
-    )
+    print(f'{bot.user.name} is connected to the following guilds:')
+    for guild in bot.guilds:
+        print(f'- {guild.name}')
 
 @bot.event
 async def on_message(message):
