@@ -87,65 +87,64 @@ async def on_message_delete(message):
 #Game Decider
 @bot.command(name = 'gamedecider', help = 'Draws a game from a lottery created by an algorithm designed to encourage playing games that hasn\'t been played in a while. Reply with yes or no')
 async def game_decider(ctx):
-    if ctx.guild.name == 'Abnormal title':
-        #Retrieving data and creating the lottery
-        data = GD.read_data()
-        lottery = GD.lottery_creation(data)
-        #Display percentages of each game
-        percent = []
-        for game in data:
-            percent.append(game[0] + ': ' + str(game[1]) + '/' + str(len(lottery)))
-        embed = discord.Embed(
-            title = 'Games percentages',
-            description = ('\n'.join(percent)),
-            colour = discord.Colour.dark_red()
-            )
-        await ctx.send(embed=embed)
-        await ctx.send('Do you want to roll?')
+    #Retrieving data and creating the lottery
+    data = GD.read_data()
+    lottery = GD.lottery_creation(data)
+    #Display percentages of each game
+    percent = []
+    for game in data:
+        percent.append(game[0] + ': ' + str(game[1]) + '/' + str(len(lottery)))
+    embed = discord.Embed(
+        title = 'Games percentages',
+        description = ('\n'.join(percent)),
+        colour = discord.Colour.dark_red()
+        )
+    await ctx.send(embed=embed)
+    await ctx.send('Do you want to roll?')
 
-        #Checks if the reply is from the original caller of the program and if it is from the same channel
-        def check(msg):
-            return msg.author == ctx.author and msg.channel == ctx.channel
+    #Checks if the reply is from the original caller of the program and if it is from the same channel
+    def check(msg):
+        return msg.author == ctx.author and msg.channel == ctx.channel
 
-        try:
-            answer = await bot.wait_for('message',timeout=20, check=check)
-            #If the user wanted to roll
-            if answer.content.lower() == 'yes':
-                chosen = random.choice(lottery)
-                await ctx.send('It has been Decided, Don\'t cry.\n\n' + chosen)
+    try:
+        answer = await bot.wait_for('message',timeout=20, check=check)
+        #If the user wanted to roll
+        if answer.content.lower() == 'yes':
+            chosen = random.choice(lottery)
+            await ctx.send('It has been Decided, Don\'t cry.\n\n' + chosen)
 
-                #If the user is not satisfied
-                stop = False
-                while stop == False:
-                    await ctx.send('Do you want to reroll?')
-                    try:
-                        answer = await bot.wait_for('message', timeout=20, check=check)
-                        if answer.content.lower() == 'yes':
-                            chosen = random.choice(lottery)
-                            await ctx.send('It has been Decided, Don\'t cry.\n' + chosen)
-                        elif answer.content.lower() == 'no':
-                            GD.save_data(chosen,data)
-                            stop = True
-                            await ctx.send('Save file updated')
-                        else:
-                            await ctx.channel.send('Invalid answer. Answer correctly you schmuck')
-                    #Error message display if the user took too long to answer 
-                    except:
-                        await ctx.send('Time has ran out to answer')
-                        
-            #if the user did not wanted to roll
-            elif answer.content.lower() == 'no':
-                await ctx.send('Alrighty then')
-            #restart percentages
-            elif answer.content.lower() == 'restart percentages' and answer.author.name == 'Banthar':
-                os.remove('Data.txt')
-                await ctx.send('Percentages have been refreshed')
-            #Invalid inputs
-            else:
-                await ctx.send('invalid answer. Restart the program peasant')
-        #Error message display if the user took too long to answer    
-        except:
-            await ctx.send('Time has ran out to answer')
+            #If the user is not satisfied
+            stop = False
+            while stop == False:
+                await ctx.send('Do you want to reroll?')
+                try:
+                    answer = await bot.wait_for('message', timeout=20, check=check)
+                    if answer.content.lower() == 'yes':
+                        chosen = random.choice(lottery)
+                        await ctx.send('It has been Decided, Don\'t cry.\n' + chosen)
+                    elif answer.content.lower() == 'no':
+                        GD.save_data(chosen,data)
+                        stop = True
+                        await ctx.send('Save file updated')
+                    else:
+                        await ctx.channel.send('Invalid answer. Answer correctly you schmuck')
+                #Error message display if the user took too long to answer 
+                except:
+                    await ctx.send('Time has ran out to answer')
+                    
+        #if the user did not wanted to roll
+        elif answer.content.lower() == 'no':
+            await ctx.send('Alrighty then')
+        #restart percentages
+        elif answer.content.lower() == 'restart percentages' and answer.author.name == 'Banthar':
+            os.remove('Data.txt')
+            await ctx.send('Percentages have been refreshed')
+        #Invalid inputs
+        else:
+            await ctx.send('invalid answer. Restart the program peasant')
+    #Error message display if the user took too long to answer    
+    except:
+        await ctx.send('Time has ran out to answer')
 
 #Rock Paper Scissors
 @bot.command(name = 'rockpaperscissors', help = 'Classis game of rock paper scissors')
@@ -390,7 +389,7 @@ async def uttt(ctx):
                     def check(reaction, user):
                         return user == player_turn 
 
-                    answer = await bot.wait_for('reaction_add',timeout = 120, check=check)
+                    answer = await bot.wait_for('reaction_add',timeout = 180, check=check)
                     reaction = str(answer[0])
 
                     if reaction == '❌':
@@ -421,7 +420,7 @@ async def uttt(ctx):
                                 return user == player_turn 
 
 
-                            answer = await bot.wait_for('reaction_add',timeout = 120, check=check)
+                            answer = await bot.wait_for('reaction_add',timeout = 180, check=check)
                             reaction = str(answer[0])
 
                             if reaction == '❌':
@@ -452,7 +451,7 @@ async def uttt(ctx):
                                         return user == player_turn 
 
 
-                                    answer = await bot.wait_for('reaction_add',timeout = 120, check=check)
+                                    answer = await bot.wait_for('reaction_add',timeout = 180, check=check)
                                     reaction = str(answer[0])
 
                                     if reaction == '❌':
@@ -483,7 +482,7 @@ async def uttt(ctx):
                                                 return user == player_turn 
 
 
-                                            answer = await bot.wait_for('reaction_add',timeout = 120, check=check)
+                                            answer = await bot.wait_for('reaction_add',timeout = 180, check=check)
                                             reaction = str(answer[0])
 
                                             if reaction == '❌':
@@ -604,7 +603,7 @@ async def uttt(ctx):
                     return user == player_turn 
 
                 try:
-                    answer = await bot.wait_for('reaction_add',timeout = 120, check=check)
+                    answer = await bot.wait_for('reaction_add',timeout = 180, check=check)
                     reaction = str(answer[0])
 
                     if reaction == '❌':
@@ -634,7 +633,7 @@ async def uttt(ctx):
                             return user == player_turn 
 
                         try:
-                            answer = await bot.wait_for('reaction_add',timeout = 120, check=check)
+                            answer = await bot.wait_for('reaction_add',timeout = 180, check=check)
                             reaction = str(answer[0])
 
                             if reaction == '❌':
