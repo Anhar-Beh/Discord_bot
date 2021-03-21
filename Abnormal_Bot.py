@@ -276,11 +276,11 @@ async def connect_4(ctx):
                     if answer[1] == player.author:
                         await tell.edit(content = f'**{ctx.author.name} wins by forfeit**')
                         game_over = True
-                        break
+                        continue
                     else:
                         await tell.edit(content = f'**{player.author.name} wins by forfeit**')
                         game_over = True
-                        break
+                        continue
                 
 
                 try:
@@ -334,7 +334,7 @@ async def uttt(ctx):
         return msg.author != ctx.author and msg.channel == ctx.channel and count < 2 and msg.content.lower() == 'me'
     
     try:
-        emoji = ['1️⃣', '2️⃣', '3️⃣', '❌']
+        emoji = ['1️⃣', '2️⃣', '3️⃣','🔁','❌']
         player = await bot.wait_for('message',timeout=20, check=check)
         count += 1
         #chooses who starts
@@ -357,12 +357,12 @@ async def uttt(ctx):
         description = TTT.display(board),
         colour = discord.Colour.dark_red()
         )
-        embed.set_footer(text = 'Pending')
+        embed.set_footer(text = 'Pending...')
         display = await ctx.send(embed=embed)
         for row in emoji:
             await display.add_reaction(row)
         tell_mode = await ctx.send('You can move anywhere')
-        ask = await ctx.send('Pending')
+        ask = await ctx.send('Pending...')
 
         while game_over == False:
             if turn == ':x:':
@@ -396,10 +396,12 @@ async def uttt(ctx):
                         if answer[1] == player.author:
                             await ask.edit(content = f'**{ctx.author.name} wins by forfeit**')
                             game_over = True
+                            continue
                             
                         else:
                             await ask.edit(content = f'**{player.author.name} wins by forfeit**')
                             game_over = True
+                            continue
                             
                     try:
                         row = (int(reaction[0]) - 1)
@@ -420,10 +422,12 @@ async def uttt(ctx):
                                 if answer[1] == player.author:
                                     await ask.edit(content = f'**{ctx.author.name} wins by forfeit**')
                                     game_over = True
+                                    continue
                                     
                                 else:
                                     await ask.edit(content = f'**{player.author.name} wins by forfeit**')
                                     game_over = True
+                                    continue
                                     
 
                             try:
@@ -443,12 +447,14 @@ async def uttt(ctx):
 
                                     if reaction == '❌':
                                         if answer[1] == player.author:
-                                            await tell.edit(content = f'**{ctx.author.name} wins by forfeit**')
+                                            await ask.edit(content = f'**{ctx.author.name} wins by forfeit**')
                                             game_over = True
-                                        
+                                            continue
+                                            
                                         else:
-                                            await tell.edit(content = f'**{player.author.name} wins by forfeit**')
+                                            await ask.edit(content = f'**{player.author.name} wins by forfeit**')
                                             game_over = True
+                                            continue
                                         
 
                                     try:
@@ -468,12 +474,14 @@ async def uttt(ctx):
 
                                             if reaction == '❌':
                                                 if answer[1] == player.author:
-                                                    await tell.edit(content = f'**{ctx.author.name} wins by forfeit**')
+                                                    await ask.edit(content = f'**{ctx.author.name} wins by forfeit**')
                                                     game_over = True
+                                                    continue
                                                     
                                                 else:
-                                                    await tell.edit(content = f'**{player.author.name} wins by forfeit**')
+                                                    await ask.edit(content = f'**{player.author.name} wins by forfeit**')
                                                     game_over = True
+                                                    continue
                                                     
 
                                             try:
@@ -538,29 +546,29 @@ async def uttt(ctx):
                                                     await asyncio.sleep(5)
                                                     turn = TTT.change_turn(turn)
                                             except:
-                                                await ask.edit(content = 'What a dumbass adding more emojis, repent for 5 seconds dipshit')
-                                                await asyncio.sleep(9)
+                                                await ask.edit(content = 'Redoing...')
+                                                await asyncio.sleep(2)
                                                 await display.remove_reaction(reaction, player_turn)
                                         except:
                                             await ask.edit(content = 'Slow as a turtle, **Game Over**')
                                             game_over = True
                                     except:
-                                        await ask.edit(content = 'What a dumbass adding more emojis, repent for 5 seconds dipshit')
-                                        await asyncio.sleep(9)
+                                        await ask.edit(content = 'Redoing...')
+                                        await asyncio.sleep(2)
                                         await display.remove_reaction(reaction, player_turn)
                                 except:
                                     await ask.edit(content = 'Slower than a sloth, **Game Over**')
                                     game_over = True    
                             except:
-                                await ask.edit(content = 'What a dumbass adding more emojis, repent for 5 seconds dipshit')
-                                await asyncio.sleep(9)
+                                await ask.edit(content = 'Redoing...')
+                                await asyncio.sleep(2)
                                 await display.remove_reaction(reaction, player_turn)
                         except:
                             await ask.edit(content = 'Time caught up, **Game Over**')
                             game_over = True
                     except:
-                        await ask.edit(content = 'What a dumbass adding more emojis, repent for 5 seconds dipshit')
-                        await asyncio.sleep(9)
+                        await ask.edit(content = 'Redoing...')
+                        await asyncio.sleep(2)
                         await display.remove_reaction(reaction, player_turn)
 
                 except:
@@ -585,10 +593,12 @@ async def uttt(ctx):
                         if answer[1] == player.author:
                             await ask.edit(content = f'**{ctx.author.name} wins by forfeit**')
                             game_over = True
+                            continue
                             
                         else:
                             await ask.edit(content = f'**{player.author.name} wins by forfeit**')
                             game_over = True
+                            continue
                             
 
                     try:
@@ -609,10 +619,12 @@ async def uttt(ctx):
                                 if answer[1] == player.author:
                                     await ask.edit(content = f'**{ctx.author.name} wins by forfeit**')
                                     game_over = True
+                                    continue
                                     
                                 else:
                                     await ask.edit(content = f'**{player.author.name} wins by forfeit**')
                                     game_over = True
+                                    continue
                                     
                             try:    
                                 move_col = (int(reaction[0]) - 1)
@@ -673,14 +685,16 @@ async def uttt(ctx):
                                     await asyncio.sleep(2)
 
                             except:
-                                await ask.edit(content = 'What a dumbass adding more emojis, repent for 5 seconds dipshit')
-                                await asyncio.sleep(9)
+                                await ask.edit(content = 'Redoing...')
+                                await asyncio.sleep(2)
+                                await remove_reaction(reaction, player_turn)
                         except:
                             await ask.edit(content = 'Too slow, **Game Over**')
                             game_over = True
                     except:
-                        await ask.edit(content = 'What a dumbass adding more emojis, repent for 5 seconds dipshit')
-                        await asyncio.sleep(9)
+                        await ask.edit(content = 'Redoing...')
+                        await asyncio.sleep(2)
+                        await remove_reaction(reaction, player_turn)
                 except:
                     await ask.edit(content = 'Slow ass peasant, **Game Over**')
                     game_over = True
