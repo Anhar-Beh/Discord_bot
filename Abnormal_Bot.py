@@ -396,11 +396,11 @@ async def uttt(ctx):
                         if answer[1] == player.author:
                             await ask.edit(content = f'**{ctx.author.name} wins by forfeit**')
                             game_over = True
-                            break
+                            
                         else:
                             await ask.edit(content = f'**{player.author.name} wins by forfeit**')
                             game_over = True
-                            break
+                            
                     try:
                         row = (int(reaction[0]) - 1)
                         await display.remove_reaction(reaction, player_turn)
@@ -420,11 +420,11 @@ async def uttt(ctx):
                                 if answer[1] == player.author:
                                     await ask.edit(content = f'**{ctx.author.name} wins by forfeit**')
                                     game_over = True
-                                    break
+                                    
                                 else:
                                     await ask.edit(content = f'**{player.author.name} wins by forfeit**')
                                     game_over = True
-                                    break
+                                    
 
                             try:
                                 col = (int(reaction[0]) - 1)
@@ -445,11 +445,11 @@ async def uttt(ctx):
                                         if answer[1] == player.author:
                                             await tell.edit(content = f'**{ctx.author.name} wins by forfeit**')
                                             game_over = True
-                                            break
+                                        
                                         else:
                                             await tell.edit(content = f'**{player.author.name} wins by forfeit**')
                                             game_over = True
-                                            break
+                                        
 
                                     try:
                                         move_row = (int(reaction[0]) - 1)
@@ -470,11 +470,11 @@ async def uttt(ctx):
                                                 if answer[1] == player.author:
                                                     await tell.edit(content = f'**{ctx.author.name} wins by forfeit**')
                                                     game_over = True
-                                                    break
+                                                    
                                                 else:
                                                     await tell.edit(content = f'**{player.author.name} wins by forfeit**')
                                                     game_over = True
-                                                    break
+                                                    
 
                                             try:
                                                 move_col = (int(reaction[0]) - 1)
@@ -585,11 +585,11 @@ async def uttt(ctx):
                         if answer[1] == player.author:
                             await ask.edit(content = f'**{ctx.author.name} wins by forfeit**')
                             game_over = True
-                            break
+                            
                         else:
                             await ask.edit(content = f'**{player.author.name} wins by forfeit**')
                             game_over = True
-                            break
+                            
 
                     try:
                         move_row = (int(reaction[0]) - 1)
@@ -609,11 +609,11 @@ async def uttt(ctx):
                                 if answer[1] == player.author:
                                     await ask.edit(content = f'**{ctx.author.name} wins by forfeit**')
                                     game_over = True
-                                    break
+                                    
                                 else:
                                     await ask.edit(content = f'**{player.author.name} wins by forfeit**')
                                     game_over = True
-                                    break
+                                    
                             try:    
                                 move_col = (int(reaction[0]) - 1)
                                 await display.remove_reaction(reaction, player_turn)
