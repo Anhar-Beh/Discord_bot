@@ -17,7 +17,7 @@ bot = commands.Bot(command_prefix='!', intents=intents)
 rejus_bot = re.compile('|')
 
 threat = ['I saw that', 'What you deleting', 'I know', 'What you doing?', 'Anhar may not know, but I know', 'I\'m always watching you', 'Very sus', 'hmmm interesting', 'Kinda sad really?', 'I\'m always watching']
-command = ['!commands','!gamedecider', '!rockpaperscissors', '!coinflip', '!cleanup', '!8ball', '!connect4', '!uttt']
+command = ['- !commands','- !gamedecider', '- !rockpaperscissors', '- !coinflip', '- !cleanup', '- !8ball', '- !connect4', '- !uttt']
 _8ball_ans = ['It is certain.', 'It is decidedly so.', 'Without a doubt.', 'Yes - definitely.', 'You may rely on it.', 'As I see it, yes.', 'Most likely.', 'Outlook good.', 'Yes.', 'Signs point to yes.', 'Reply hazy, try again.', 'Ask again later.', 'Cannot predict now.', 'Concentrate and ask again.', 'Don\'t count on it.', 'My reply is no.', 'My sources say no.', 'Outlook not so good.', 'Very doubtful.'] 
 ##################################################################### Events ###############################################################################################################
 @bot.event
@@ -77,7 +77,7 @@ async def on_message(message):
 async def on_message_delete(message):
     if message.author.name != bot.user.name and message.content.lower() != 'terbaikkk' and message.content.lower() != 'ish' and rejus_bot.search(message.content.lower()) != True:
         await message.author.send(random.choice(threat))
-        print(message.author.name + ' deleted the message \"' + message.content + '\"')
+        print(message.guild.name + ':\n' + message.author.name + ' deleted the message \"' + message.content + '\"')
         
     await bot.process_commands(message)
 
@@ -193,7 +193,7 @@ async def coin_flip(ctx):
     await ctx.send(random.choice(['Heads', 'Tails']))
 
 #displays all the robo bot commands
-@bot.command(name = 'commands', help = 'displays all the commands Robo Bot serves')
+@bot.command(name = 'commands', help = 'displays all the commands Abnormal Bot serves')
 async def commands(ctx):
     user = await bot.fetch_user(814136775496302683)
     pfp = user.avatar_url
@@ -203,6 +203,7 @@ async def commands(ctx):
             colour = discord.Colour.dark_red()
             )
     embed.set_thumbnail(url = pfp)
+    embed.set_footer(text = 'Please refer to the \"!help\" command for further information')
     await ctx.send(embed=embed)
 
 #post 2 gifs to cover the screen
@@ -402,6 +403,11 @@ async def uttt(ctx):
                             await ask.edit(content = f'**{player.author.name} wins by forfeit**')
                             game_over = True
                             continue
+                    if reaction == '🔁':
+                        await ask.edit(content = 'Redoing...')
+                        await asyncio.sleep(1)
+                        await display.remove_reaction(reaction, player_turn)
+                        continue
                             
                     try:
                         row = (int(reaction[0]) - 1)
@@ -428,7 +434,11 @@ async def uttt(ctx):
                                     await ask.edit(content = f'**{player.author.name} wins by forfeit**')
                                     game_over = True
                                     continue
-                                    
+                            if reaction == '🔁':
+                                await ask.edit(content = 'Redoing...')
+                                await asyncio.sleep(1)
+                                await display.remove_reaction(reaction, player_turn)
+                                continue
 
                             try:
                                 col = (int(reaction[0]) - 1)
@@ -455,7 +465,11 @@ async def uttt(ctx):
                                             await ask.edit(content = f'**{player.author.name} wins by forfeit**')
                                             game_over = True
                                             continue
-                                        
+                                    if reaction == '🔁':
+                                        await ask.edit(content = 'Redoing...')
+                                        await asyncio.sleep(1)
+                                        await display.remove_reaction(reaction, player_turn)
+                                        continue
 
                                     try:
                                         move_row = (int(reaction[0]) - 1)
@@ -482,7 +496,11 @@ async def uttt(ctx):
                                                     await ask.edit(content = f'**{player.author.name} wins by forfeit**')
                                                     game_over = True
                                                     continue
-                                                    
+                                            if reaction == '🔁':
+                                                await ask.edit(content = 'Redoing...')
+                                                await asyncio.sleep(1)
+                                                await display.remove_reaction(reaction, player_turn)
+                                                continue
 
                                             try:
                                                 move_col = (int(reaction[0]) - 1)
@@ -546,29 +564,29 @@ async def uttt(ctx):
                                                     await asyncio.sleep(5)
                                                     turn = TTT.change_turn(turn)
                                             except:
-                                                await ask.edit(content = 'Redoing...')
-                                                await asyncio.sleep(2)
+                                                await ask.edit(content = 'What a dumbass adding a different emoji, repent for 5 seconds dipshit')
+                                                await asyncio.sleep(9)
                                                 await display.remove_reaction(reaction, player_turn)
                                         except:
                                             await ask.edit(content = 'Slow as a turtle, **Game Over**')
                                             game_over = True
                                     except:
-                                        await ask.edit(content = 'Redoing...')
-                                        await asyncio.sleep(2)
+                                        await ask.edit(content = 'What a dumbass adding a different emoji, repent for 5 seconds dipshit')
+                                        await asyncio.sleep(9)
                                         await display.remove_reaction(reaction, player_turn)
                                 except:
                                     await ask.edit(content = 'Slower than a sloth, **Game Over**')
                                     game_over = True    
                             except:
-                                await ask.edit(content = 'Redoing...')
-                                await asyncio.sleep(2)
+                                await ask.edit(content = 'What a dumbass adding a different emoji, repent for 5 seconds dipshit')
+                                await asyncio.sleep(9)
                                 await display.remove_reaction(reaction, player_turn)
                         except:
                             await ask.edit(content = 'Time caught up, **Game Over**')
                             game_over = True
                     except:
-                        await ask.edit(content = 'Redoing...')
-                        await asyncio.sleep(2)
+                        await ask.edit(content = 'What a dumbass adding a different emoji, repent for 5 seconds dipshit')
+                        await asyncio.sleep(9)
                         await display.remove_reaction(reaction, player_turn)
 
                 except:
@@ -599,7 +617,11 @@ async def uttt(ctx):
                             await ask.edit(content = f'**{player.author.name} wins by forfeit**')
                             game_over = True
                             continue
-                            
+                    if reaction == '🔁':
+                        await ask.edit(content = 'Redoing...')
+                        await asyncio.sleep(1)
+                        await display.remove_reaction(reaction, player_turn)
+                        continue
 
                     try:
                         move_row = (int(reaction[0]) - 1)
@@ -625,7 +647,11 @@ async def uttt(ctx):
                                     await ask.edit(content = f'**{player.author.name} wins by forfeit**')
                                     game_over = True
                                     continue
-                                    
+                            if reaction == '🔁':
+                                await ask.edit(content = 'Redoing...')
+                                await asyncio.sleep(1)
+                                await display.remove_reaction(reaction, player_turn)
+                                continue
                             try:    
                                 move_col = (int(reaction[0]) - 1)
                                 await display.remove_reaction(reaction, player_turn)
@@ -685,16 +711,16 @@ async def uttt(ctx):
                                     await asyncio.sleep(2)
 
                             except:
-                                await ask.edit(content = 'Redoing...')
-                                await asyncio.sleep(2)
-                                await remove_reaction(reaction, player_turn)
+                                await ask.edit(content = 'What a dumbass adding a different emoji, repent for 5 seconds dipshit')
+                                await asyncio.sleep(9)
+                                await display.remove_reaction(reaction, player_turn)
                         except:
                             await ask.edit(content = 'Too slow, **Game Over**')
                             game_over = True
                     except:
-                        await ask.edit(content = 'Redoing...')
-                        await asyncio.sleep(2)
-                        await remove_reaction(reaction, player_turn)
+                        await ask.edit(content = 'What a dumbass adding a different emoji, repent for 5 seconds dipshit')
+                        await asyncio.sleep(9)
+                        await display.remove_reaction(reaction, player_turn)
                 except:
                     await ask.edit(content = 'Slow ass peasant, **Game Over**')
                     game_over = True
