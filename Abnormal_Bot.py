@@ -324,7 +324,7 @@ async def connect_4(ctx):
     
 
 
-@bot.command(name = 'uttt', help = 'A variation of Tic Tac Toe and explaining how to play is a pain so please watch this video https://youtu.be/37PC0bGMiTI but there will be two more rules: If you are sent to a won square then you can go anywhere, In a event of a tie, the person with the most square wins')
+@bot.command(name = 'uttt', help = 'A variation of Tic Tac Toe that consists of a 3x3 grid with individual 3x3 grids inside each square called big grid and small grid respectively. Like Tic Tac Toe, you win by having 3 contiguous symbols lined up horizontally, vertically or diagonally but this applies to both big and small grid and the objective is to win the big grid. When making a move in a small grid, you are influencing the opponents move by sending them to the corresponding small grid coordinates in the big grid. However, if you send the opponent to an already won small square then they can choose anywhere on the big grid to go.')
 async def uttt(ctx):
     await ctx.send('Whoever wants to play, say \"me\"')
     count = 0
@@ -483,7 +483,6 @@ async def uttt(ctx):
                                                 if board_backend[row][col] == ':black_large_square:':
                                                     if board[row][col][move_row][move_col] == ':black_large_square:':
                                                         board[row][col][move_row][move_col] = turn
-                                                        mode = TTT.check_mode(board_backend, move_row, move_col)
 
                                                         if TTT.check_win(board[row][col]) == turn: # Check small grid win
                                                             board_backend[row][col] = turn
@@ -528,6 +527,7 @@ async def uttt(ctx):
                                                         row = move_row
                                                         col = move_col
                                                         turn = TTT.change_turn(turn)
+                                                        mode = TTT.check_mode(board_backend, row, col)
                                                         
                                                     else:
                                                         await ask.edit(content = 'Coordinate occupied')
@@ -620,7 +620,7 @@ async def uttt(ctx):
                                 
                                 if board[row][col][move_row][move_col] == ':black_large_square:':
                                     board[row][col][move_row][move_col] = turn
-                                    mode = TTT.check_mode(board_backend, move_row, move_col)
+        
                                     
                                     if TTT.check_win(board[row][col]) == turn: # Check small grid win
                                         board_backend[row][col] = turn
@@ -661,10 +661,12 @@ async def uttt(ctx):
                                         embed.set_footer(text = f'It is {player_turn.name}\'s turn')
                                         await display.edit(embed=embed)
                                         game_over = True
+
                                         
                                     row = move_row
                                     col = move_col
                                     turn = TTT.change_turn(turn)
+                                    mode = TTT.check_mode(board_backend, row, col)
                                     
                                 else:
                                     await ask.edit(content = 'Coordinate is occupied')

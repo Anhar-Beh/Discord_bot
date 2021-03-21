@@ -108,5 +108,5 @@ def check_tie(square, define):
 
                     
 ####################################################################################################
-print ('Ultimate Tic Tac Toe online')
+print ('Ultimate Tic Tac Toe is online')
         
