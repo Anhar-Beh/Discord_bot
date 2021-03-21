@@ -249,7 +249,7 @@ async def connect_4(ctx):
         for row in board:
             temp_board.append(''.join(row)+'\n')
         embed = discord.Embed(
-        title = f'{ctx.author.name}(:blue_circle:)/{player.author.name}(:red_circle:)',
+        title = f'{ctx.author.name}:blue_circle:**/**{player.author.name}:red_circle:',
         description = (''.join(temp_board)),
         colour = discord.Colour.dark_red()
         )
@@ -295,7 +295,7 @@ async def connect_4(ctx):
                         for row in board:
                             temp_board.append(''.join(row)+'\n')
                         embed = discord.Embed(
-                        title = f'{ctx.author.name}(:blue_circle:)/{player.author.name}(:red_circle:)',
+                        title = f'{ctx.author.name}:blue_circle:**/**{player.author.name}:red_circle:',
                         description = (''.join(temp_board)),
                         colour = discord.Colour.dark_red()
                         )
@@ -353,7 +353,7 @@ async def uttt(ctx):
         game_over = False
         mode = 'free'
         embed = discord.Embed(
-        title = f'{ctx.author.name}(:x:)/{player.author.name}(:o:)',
+        title = f'{ctx.author.name}:x:**/**{player.author.name}:o:',
         description = TTT.display(board),
         colour = discord.Colour.dark_red()
         )
@@ -371,7 +371,7 @@ async def uttt(ctx):
                 player_turn = player.author
                 
             embed = discord.Embed(
-            title = f'{ctx.author.name}(:x:)/{player.author.name}(:o:)',
+            title = f'{ctx.author.name}:x:**/**{player.author.name}:o:',
             description = TTT.display(board),
             colour = discord.Colour.dark_red()
             )
@@ -518,7 +518,7 @@ async def uttt(ctx):
                                                             else:
                                                                 await ask.edit(content = f'**{player.author.name} won**')
                                                             embed = discord.Embed(
-                                                            title = f'{ctx.author.name}(:x:)/{player.author.name}(:o:)',
+                                                            title = f'{ctx.author.name}:x:**/**{player.author.name}:o:',
                                                             description = TTT.display(board),
                                                             colour = discord.Colour.dark_red()
                                                             )
@@ -541,7 +541,7 @@ async def uttt(ctx):
                                                                 else:
                                                                     await ask.edit(content = f'**{player.author.name} won**')
                                                             embed = discord.Embed(
-                                                            title = f'{ctx.author.name}(:x:)/{player.author.name}(:o:)',
+                                                            title = f'{ctx.author.name}:x:**/**{player.author.name}:o:',
                                                             description = TTT.display(board),
                                                             colour = discord.Colour.dark_red()
                                                             )
@@ -668,7 +668,7 @@ async def uttt(ctx):
                                         else:
                                             await ask.edit(content = f'**{player.author.name} won**')
                                         embed = discord.Embed(
-                                        title = f'{ctx.author.name}(:x:)/{player.author.name}(:o:)',
+                                        title = f'{ctx.author.name}:x:**/**{player.author.name}:o:',
                                         description = TTT.display(board),
                                         colour = discord.Colour.dark_red()
                                         )
@@ -691,7 +691,7 @@ async def uttt(ctx):
                                             else:
                                                 await ask.edit(content = f'**{player.author.name} won**')
                                         embed = discord.Embed(
-                                        title = f'{ctx.author.name}(:x:)/{player.author.name}(:o:)',
+                                        title = f'{ctx.author.name}:x:**/**{player.author.name}:o:',
                                         description = TTT.display(board),
                                         colour = discord.Colour.dark_red()
                                         )
