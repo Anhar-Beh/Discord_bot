@@ -79,7 +79,7 @@ async def on_message_delete(message):
         await message.author.send(random.choice(threat))
         print(message.guild.name + ':\n' + message.author.name + ' deleted the message \"' + message.content + '\"')
         if message.author.id == 742845584406478991:
-            await message.channel.send('Pussy ' + message.author.name + ' said: ' + message.content)
+            await message.channel.send('Pussy ' + message.author.name + ' said \"' + message.content + '\"')
             
         
     await bot.process_commands(message)
