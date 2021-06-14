@@ -16,7 +16,7 @@ bot = commands.Bot(command_prefix='!', intents=intents)
 
 rejus_bot = re.compile('|')
 
-threat = ['I saw that', 'What you deleting', 'I know', 'What you doing?', 'Anhar may not know, but I know', 'I\'m always watching you', 'Very sus', 'hmmm interesting', 'Kinda sad really?', 'I\'m always watching']
+threat = ['I saw that', 'What you deleting', 'I know', 'What you doing?', 'Nobody may not know, but I know', 'I\'m always watching you', 'Very sus', 'hmmm interesting', 'Kinda sad really', 'I\'m always watching']
 command = ['- !commands','- !gamedecider', '- !rockpaperscissors', '- !coinflip', '- !cleanup', '- !8ball', '- !connect4', '- !uttt']
 _8ball_ans = ['It is certain.', 'It is decidedly so.', 'Without a doubt.', 'Yes - definitely.', 'You may rely on it.', 'As I see it, yes.', 'Most likely.', 'Outlook good.', 'Yes.', 'Signs point to yes.', 'Reply hazy, try again.', 'Ask again later.', 'Cannot predict now.', 'Concentrate and ask again.', 'Don\'t count on it.', 'My reply is no.', 'My sources say no.', 'Outlook not so good.', 'Very doubtful.'] 
 ##################################################################### Events ###############################################################################################################
@@ -78,6 +78,9 @@ async def on_message_delete(message):
     if message.author.name != bot.user.name and message.content.lower() != 'terbaikkk' and message.content.lower() != 'ish' and rejus_bot.search(message.content.lower()) != True:
         await message.author.send(random.choice(threat))
         print(message.guild.name + ':\n' + message.author.name + ' deleted the message \"' + message.content + '\"')
+        if message.author.id == 742845584406478991:
+            await message.channel.send('Pussy ' + message.author.name + ' said: ' + message.content)
+            
         
     await bot.process_commands(message)
 
