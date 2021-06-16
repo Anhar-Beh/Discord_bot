@@ -75,12 +75,12 @@ async def on_message(message):
     
 @bot.event
 async def on_message_delete(message):
+    if message.author.id == 742845584406478991:
+        chan = bot.get_channel(853996199131349023)
+        await chan.send('The Pussy said \"' + message.content + '\"')
     if message.author.name != bot.user.name and message.content.lower() != 'terbaikkk' and message.content.lower() != 'ish' and rejus_bot.search(message.content.lower()) != True:
         await message.author.send(random.choice(threat))
         print(message.guild.name + ':\n' + message.author.name + ' deleted the message \"' + message.content + '\"')
-        if message.author.id == 742845584406478991:
-            chan = bot.get_channel(853996199131349023)
-            await chan.send('The Pussy said \"' + message.content + '\"')
             
         
     await bot.process_commands(message)
