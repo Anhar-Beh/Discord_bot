@@ -16,7 +16,7 @@ bot = commands.Bot(command_prefix='!', intents=intents)
 
 rejus_bot = re.compile('|')
 
-threat = ['I saw that', 'What you deleting', 'I know', 'What you doing?', 'Nobody may not know, but I know', 'I\'m always watching you', 'Very sus', 'hmmm interesting', 'Kinda sad really', 'I\'m always watching']
+threat = ['https://tenor.com/view/wallace-and-gromit-penguin-stick-em-up-gun-gif-15832936','I saw that', 'What you deleting', 'I know', 'What you doing?', 'Nobody may not know, but I know', 'I\'m always watching you', 'Very sus', 'hmmm interesting', 'Kinda sad really', 'I\'m always watching']
 command = ['- !commands','- !gamedecider', '- !rockpaperscissors', '- !coinflip', '- !cleanup', '- !8ball', '- !connect4', '- !uttt']
 _8ball_ans = ['It is certain.', 'It is decidedly so.', 'Without a doubt.', 'Yes - definitely.', 'You may rely on it.', 'As I see it, yes.', 'Most likely.', 'Outlook good.', 'Yes.', 'Signs point to yes.', 'Reply hazy, try again.', 'Ask again later.', 'Cannot predict now.', 'Concentrate and ask again.', 'Don\'t count on it.', 'My reply is no.', 'My sources say no.', 'Outlook not so good.', 'Very doubtful.'] 
 ##################################################################### Events ###############################################################################################################
