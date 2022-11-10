@@ -1,4 +1,3 @@
-import random
 import re
 
 def check_move(table, column):

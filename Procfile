@@ -1,1 +1,0 @@
-worker: python Abnormal_Bot.py
